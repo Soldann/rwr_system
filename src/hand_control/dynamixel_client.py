@@ -529,6 +529,7 @@ class DynamixelClient:
                     self.port_handler, self.packet_handler, address, size
                 )
             sync_reader = self._sync_readers[key]
+                       
 
             # Clear any existing parameters
             sync_reader.clearParam()
@@ -542,7 +543,7 @@ class DynamixelClient:
             success = False
             while not success and retries >= 0:
                 with self.port_rlock:
-                    comm_result = sync_reader.fastSyncRead()
+                    comm_result = sync_reader.txRxPacket()
                     success = self.handle_packet_result(comm_result, context="syncRead")
                 retries -= 1
 
