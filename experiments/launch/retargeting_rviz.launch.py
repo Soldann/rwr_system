@@ -5,13 +5,18 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+    # urdf = "/home/jamesearljone/ros2_ws/src/real-world-robotics/ros/src/rwr_system/src/viz/models/URDF_Simulation/model_V5.urdf"
     urdf = os.path.join(
-    get_package_share_directory('viz'),
-    "models",
-    "faive_hand_p4",
-    "urdf",
-    "p4.urdf")
-
+        get_package_share_directory('viz'),
+        "models",
+        "URDF_Simulation",
+        "model_V5.urdf")
+    # urdf = os.path.join(
+    # get_package_share_directory('viz'),
+    # "models",
+    # "faive_hand_p4",
+    # "urdf",
+    # "p4.urdf")
     with open(urdf, 'r') as infp:
         robot_desc = infp.read()
         
@@ -43,14 +48,12 @@ def generate_launch_description():
                     # },
                     {
                         "retarget/urdf_filepath": os.path.join(
-                            get_package_share_directory("viz"),
+                            get_package_share_directory('viz'),
                             "models",
-                            "faive_hand_p4",
-                            "urdf",
-                            "p4.urdf",
-                        )
+                            "URDF_Simulation",
+                            "model_V5.urdf")
                     },
-                    {"retarget/hand_scheme": "p4"},
+                    {"retarget/hand_scheme": "hand"},
                     {"debug": True},
                 ],
             ),
@@ -62,12 +65,17 @@ def generate_launch_description():
                 name="visualize_joints",
                 parameters=[
                     {
+                        # "scheme_path": os.path.join(
+                        #     get_package_share_directory("viz"),
+                        #     "models",
+                        #     "faive_hand_p4",
+                        #     "scheme_p4.yaml",
+                        # )
                         "scheme_path": os.path.join(
-                            get_package_share_directory("viz"),
+                            get_package_share_directory('viz'),
                             "models",
-                            "faive_hand_p4",
-                            "scheme_p4.yaml",
-                        )
+                            "URDF_Simulation",
+                            "scheme_hand.yaml")
                     }
                 ],
                 output="screen",
