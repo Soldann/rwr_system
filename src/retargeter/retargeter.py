@@ -90,6 +90,7 @@ class Retargeter:
         os.chdir(prev_cwd)
 
         joint_parameter_names = self.chain.get_joint_parameter_names()
+        print(joint_parameter_names)
         gc_tendons = GC_TENDONS
         self.n_joints = self.chain.n_joints
         self.n_tendons = len(
@@ -120,14 +121,14 @@ class Retargeter:
         # self.opt = torch.optim.Adam([self.gc_joints], lr=self.lr)
         self.opt = torch.optim.RMSprop([self.gc_joints], lr=self.lr)
 
-        self.root = torch.zeros(1, 3).to(self.device)
+        self.root = torch.tensor([[0,0,0]]).type(torch.float32).to(self.device)
 
         self.loss_coeffs = torch.tensor([5.0, 5.0, 5.0, 5.0, 5.0]).to(self.device)
 
         if use_scalar_distance_palm:
-            self.use_scalar_distance = [False, True, True, True, True]
+            self.use_scalar_distance = [False, True, True, True, True] + [True, True, True, True, True] * 2
         else:
-            self.use_scalar_distance = [False, False, False, False, False]
+            self.use_scalar_distance = [False, False, False, False, False] 
 
         self.sanity_check()
         _chain_transforms = self.chain.forward_kinematics(
@@ -192,11 +193,17 @@ class Retargeter:
         chain_transform3 = self.chain.forward_kinematics(
             torch.randn(self.chain.n_joints, device=self.chain.device)
         )
+        self.chain.print_tree()
         for finger, base in self.finger_to_base.items():
             print(
                 chain_transform1[base].transform_points(self.root),
                 chain_transform1[base].transform_points(self.root),
                 chain_transform1[base].transform_points(self.root),
+            )
+            print(
+                chain_transform2[base].transform_points(self.root),
+                chain_transform2[base].transform_points(self.root),
+                chain_transform2[base].transform_points(self.root),
             )
             # assert torch.allclose(
             #     chain_transform1[base].transform_points(self.root),
@@ -256,8 +263,9 @@ class Retargeter:
         )
 
         keyvectors_mano = retarget_utils.get_keyvectors(mano_fingertips, mano_palm)
-        # norms_mano = {k: torch.norm(v) for k, v in keyvectors_mano.items()}
-        # print(f"keyvectors_mano: {norms_mano}")
+        norms_mano = {k: torch.norm(v) for k, v in keyvectors_mano.items()}
+        print(f"keyvectors_mano: {norms_mano}")
+        keyvectors_mano = {k: v*0.5 for k, v in keyvectors_mano.items()}
 
         for step in range(opt_steps):
             chain_transforms = self.chain.forward_kinematics(
@@ -279,8 +287,8 @@ class Retargeter:
             ) / 2
 
             keyvectors_faive = retarget_utils.get_keyvectors(fingertips, palm)
-            # norms_faive = {k: torch.norm(v) for k, v in keyvectors_faive.items()}
-            # print(f"keyvectors_faive: {norms_faive}")
+            norms_faive = {k: torch.norm(v) for k, v in keyvectors_faive.items()}
+            print(f"keyvectors_faive: {norms_faive}")
 
             loss = 0
 
