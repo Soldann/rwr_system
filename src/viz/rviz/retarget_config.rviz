@@ -21,7 +21,7 @@ Panels:
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
-    Name: Views
+    Name: Views-
     Splitter Ratio: 0.5
   - Class: rviz_common/Time
     Experimental: false
@@ -500,7 +500,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: hand_root
+    Fixed Frame: root
     Frame Rate: 30
   Name: root
   Tools:

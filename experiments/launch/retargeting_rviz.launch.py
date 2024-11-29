@@ -10,7 +10,7 @@ def generate_launch_description():
         get_package_share_directory('viz'),
         "models",
         "URDF_Simulation",
-        "model_V5.urdf")
+        "model_V6.urdf")
     # urdf = os.path.join(
     # get_package_share_directory('viz'),
     # "models",
@@ -23,24 +23,24 @@ def generate_launch_description():
     return LaunchDescription(
         [
             
-            # Node(
-            #     package="ingress",
-            #     executable="mediapipe_node.py",
-            #     name="mediapipe_node",
-            #     output="log",
-            # ),
             Node(
                 package="ingress",
-                executable="rokoko_node.py",
-                name="rokoko_node",
+                executable="mediapipe_node.py",
+                name="mediapipe_node",
                 output="log",
-                parameters=[
-                    {"rokoko_tracker/ip": "0.0.0.0"},
-                    {"rokoko_tracker/port": 14043},
-                    {"rokoko_tracker/use_coil": True}
-                ],
             ),
-
+            
+            # Node(
+            #     package="ingress",
+            #     executable="rokoko_node.py",
+            #     name="rokoko_node",
+            #     output="log",
+            #     parameters=[
+            #         {"rokoko_tracker/ip": "0.0.0.0"},
+            #         {"rokoko_tracker/port": 14043},
+            #         {"rokoko_tracker/use_coil": True}
+            #     ],
+            # ),
 
             # RETARGET NODE
             Node(
@@ -55,7 +55,7 @@ def generate_launch_description():
                             get_package_share_directory('viz'),
                             "models",
                             "URDF_Simulation",
-                            "model_V5.urdf",
+                            "model_V6.urdf",
                         ),
                         "retarget/hand_scheme": os.path.join(
                             get_package_share_directory("viz"),
