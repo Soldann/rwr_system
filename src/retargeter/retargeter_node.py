@@ -45,6 +45,8 @@ class RetargeterNode(Node):
 
         debug = self.get_parameter("debug").value
         
+        self.wrist_positions = None
+
         # subscribe to ingress topics
         self.ingress_mano_sub = self.create_subscription(
             Float32MultiArray, "/ingress/mano", self.ingress_mano_cb, 10
@@ -66,7 +68,6 @@ class RetargeterNode(Node):
         if self.debug:
             self.rviz_pub = self.create_publisher(MarkerArray, 'retarget/normalized_mano_points', 10)
             self.mano_hand_visualizer = ManoHandVisualizer(self.rviz_pub)
-            
         
         self.timer = self.create_timer(0.005, self.timer_publish_cb)
         self.keypoint_positions = None
@@ -98,10 +99,13 @@ class RetargeterNode(Node):
                     stamp=self.get_clock().now().to_msg(),
                 )
         
-            wrist_angle = np.quat2yaw(self.wrist_positions.orientation)
-            joint_angles = np.concatenate(joint_angles,wrist_angle)
+            if self.wrist_positions:
+                wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
+            else:
+                wrist_angle = np.array([0])
+            joint_angles = np.concatenate((joint_angles,wrist_angle))
             self.joints_pub.publish(
-                numpy_to_float32_multiarray(np.deg2rad(joint_angles[1:]))
+                numpy_to_float32_multiarray(np.deg2rad(joint_angles))
             )
 
             if self.debug:
