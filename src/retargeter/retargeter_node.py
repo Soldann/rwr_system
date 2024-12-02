@@ -51,7 +51,7 @@ class RetargeterNode(Node):
         )
         
         self.retargeter = Retargeter(
-            device="cuda",  mjcf_filepath= mjcf_filepath, urdf_filepath=urdf_filepath, 
+            device="cpu",  mjcf_filepath= mjcf_filepath, urdf_filepath=urdf_filepath, 
             hand_scheme=hand_scheme, mano_adjustments=mano_adjustments, retargeter_cfg=retargeter_cfg
         )
         
@@ -90,7 +90,7 @@ class RetargeterNode(Node):
                 )
 
             self.joints_pub.publish(
-                numpy_to_float32_multiarray(np.deg2rad(joint_angles))
+                numpy_to_float32_multiarray(np.deg2rad(joint_angles[1:]))
             )
 
             if self.debug:
