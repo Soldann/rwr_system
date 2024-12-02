@@ -68,33 +68,33 @@ class RetargeterNode(Node):
         return np.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z)
         
     def timer_publish_cb(self):
-        # try:
-        if self.debug:
-            self.mano_hand_visualizer.reset_markers()
+        try:
+            if self.debug:
+                self.mano_hand_visualizer.reset_markers()
 
-        debug_dict = {}
-        joint_angles, debug_dict = self.retargeter.retarget(self.keypoint_positions, debug_dict)
+            debug_dict = {}
+            joint_angles, debug_dict = self.retargeter.retarget(self.keypoint_positions, debug_dict)
 
-        if self.debug:
-            self.mano_hand_visualizer.generate_hand_markers(
-                debug_dict["normalized_joint_pos"],
-                stamp=self.get_clock().now().to_msg(),
+            if self.debug:
+                self.mano_hand_visualizer.generate_hand_markers(
+                    debug_dict["normalized_joint_pos"],
+                    stamp=self.get_clock().now().to_msg(),
+                )
+        
+            if self.wrist_positions and False:
+                wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
+            else:
+                wrist_angle = np.array([0])
+            joint_angles = np.concatenate((joint_angles,wrist_angle))
+            self.joints_pub.publish(
+                numpy_to_float32_multiarray(np.deg2rad(joint_angles))
             )
-    
-        if self.wrist_positions:
-            wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
-        else:
-            wrist_angle = np.array([0])
-        joint_angles = np.concatenate((joint_angles,wrist_angle))
-        self.joints_pub.publish(
-            numpy_to_float32_multiarray(np.deg2rad(joint_angles))
-        )
 
-        if self.debug:
-            self.mano_hand_visualizer.publish_markers()
-        # except Exception as e:
-        #     print(f"Error in timer_publish_cb: {e}")
-        #     pass
+            if self.debug:
+                self.mano_hand_visualizer.publish_markers()
+        except Exception as e:
+            print(f"Error in timer_publish_cb: {e}")
+            pass
 
 
 def main(args=None):

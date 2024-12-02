@@ -266,7 +266,7 @@ class Retargeter:
         norms_mano = {k: torch.norm(v) for k, v in keyvectors_mano.items()}
         print(f"keyvectors_mano: {norms_mano}")
         keyvectors_mano = {k: v*0.5 for k, v in keyvectors_mano.items()}
-
+        keyvectors_mano["palm2thumb"] *= 3
         for step in range(opt_steps):
             chain_transforms = self.chain.forward_kinematics(
                 self.joint_map @ (self.gc_joints / (180 / np.pi))
