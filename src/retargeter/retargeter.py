@@ -124,6 +124,8 @@ class Retargeter:
         ## The virtual joints are identified by the suffix "_virt"
         ## So, the output of the virtual joint will be the sum of the joint and its virtual counterpart, i.e. twice 
         joint_parameter_names = self.chain.get_joint_parameter_names()
+        # self.chain.print_tree()
+        # print(self.chain.get_joints())
         gc_tendons = GC_TENDONS
         self.n_joints = self.chain.n_joints
         self.n_tendons = len(
@@ -293,6 +295,8 @@ class Retargeter:
         )
 
         keyvectors_mano = retarget_utils.get_keyvectors(mano_fingertips, mano_palm)
+        print("mano")
+        print(keyvectors_mano["palm2thumb"], keyvectors_mano["palm2index"])
         # norms_mano = {k: torch.norm(v) for k, v in keyvectors_mano.items()}
         # print(f"keyvectors_mano: {norms_mano}")
 
@@ -316,6 +320,8 @@ class Retargeter:
             ) / 2
 
             keyvectors_faive = retarget_utils.get_keyvectors(fingertips, palm)
+            print("faive")
+            print(keyvectors_faive["palm2thumb"], keyvectors_faive["palm2index"])
             # norms_faive = {k: torch.norm(v) for k, v in keyvectors_faive.items()}
             # print(f"keyvectors_faive: {norms_faive}")
 

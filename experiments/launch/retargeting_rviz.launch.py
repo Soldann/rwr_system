@@ -23,24 +23,24 @@ def generate_launch_description():
     return LaunchDescription(
         [
             
-            # Node(
-            #     package="ingress",
-            #     executable="mediapipe_node.py",
-            #     name="mediapipe_node",
-            #     output="log",
-            # ),
-            
             Node(
                 package="ingress",
-                executable="rokoko_node.py",
-                name="rokoko_node",
+                executable="mediapipe_node.py",
+                name="mediapipe_node",
                 output="log",
-                parameters=[
-                    {"rokoko_tracker/ip": "0.0.0.0"},
-                    {"rokoko_tracker/port": 14043},
-                    {"rokoko_tracker/use_coil": True}
-                ],
             ),
+            
+            # Node(
+            #     package="ingress",
+            #     executable="rokoko_node.py",
+            #     name="rokoko_node",
+            #     output="log",
+            #     parameters=[
+            #         {"rokoko_tracker/ip": "0.0.0.0"},
+            #         {"rokoko_tracker/port": 14043},
+            #         {"rokoko_tracker/use_coil": True}
+            #     ],
+            # ),
 
             # RETARGET NODE
             Node(
@@ -60,18 +60,18 @@ def generate_launch_description():
                         "retarget/hand_scheme": os.path.join(
                             get_package_share_directory("viz"),
                             "models",
-                            "faive_hand_p4",
-                            "scheme_p4.yaml",
+                            "URDF_Simulation",
+                            "scheme_hand.yaml",
                         ),
                         "retarget/mano_adjustments": os.path.join(
                             get_package_share_directory("experiments"),
                             "cfgs",
-                            "retargeter_adjustment.yaml"
+                            "retargeter_adjustment_hand.yaml"
                         ),
                         "retarget/retargeter_cfg": os.path.join(
                             get_package_share_directory("experiments"),
                             "cfgs",
-                            "retargeter_cfgs_p4.yaml"
+                            "retargeter_cfgs_hand.yaml"
                         ),
                     },
                     {"debug": True},

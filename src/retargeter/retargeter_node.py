@@ -98,12 +98,12 @@ class RetargeterNode(Node):
                     debug_dict["normalized_joint_pos"],
                     stamp=self.get_clock().now().to_msg(),
                 )
-        
-            if self.wrist_positions:
+
+            if self.wrist_positions and False:
                 wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
             else:
                 wrist_angle = np.array([0])
-            joint_angles = np.concatenate((joint_angles,wrist_angle))
+            # joint_angles = np.concatenate((joint_angles,wrist_angle))
             self.joints_pub.publish(
                 numpy_to_float32_multiarray(np.deg2rad(joint_angles))
             )
