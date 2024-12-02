@@ -33,11 +33,11 @@ def generate_launch_description():
                 package="ingress",
                 executable="rokoko_node.py",
                 name="rokoko_node",
-                output="screen",
+                output="log",
                 parameters=[
                     {"rokoko_tracker/ip": "0.0.0.0"},
                     {"rokoko_tracker/port": 14043},
-                    {"rokoko_tracker/use_coil": False}
+                    {"rokoko_tracker/use_coil": True}
                 ],
             ),
 

@@ -49,6 +49,10 @@ class RetargeterNode(Node):
         self.ingress_mano_sub = self.create_subscription(
             Float32MultiArray, "/ingress/mano", self.ingress_mano_cb, 10
         )
+
+        self.ingress_wrist_sub = self.create_subscription(
+            PoseStamped, "/ingress/wrist", self.ingress_wrist_cb, 10
+        )
         
         self.retargeter = Retargeter(
             device="cpu",  mjcf_filepath= mjcf_filepath, urdf_filepath=urdf_filepath, 
@@ -70,6 +74,11 @@ class RetargeterNode(Node):
     def ingress_mano_cb(self, msg):
         self.keypoint_positions = np.array(msg.data).reshape(-1, 3)
     
+    def ingress_wrist_cb(self,msg):
+        self.wrist_positions = msg.pose
+
+    def quat2yaw(q):
+        return np.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z)
         
     def timer_publish_cb(self):
         if self.keypoint_positions is None:
@@ -88,7 +97,9 @@ class RetargeterNode(Node):
                     debug_dict["normalized_joint_pos"],
                     stamp=self.get_clock().now().to_msg(),
                 )
-
+        
+            wrist_angle = np.quat2yaw(self.wrist_positions.orientation)
+            joint_angles = np.concatenate(joint_angles,wrist_angle)
             self.joints_pub.publish(
                 numpy_to_float32_multiarray(np.deg2rad(joint_angles[1:]))
             )
