@@ -46,6 +46,10 @@ def tendon_length_pin_joint(theta, R1):
    """
    return -R1 * theta
 
+def get_tendon_length_lambda_wrist(joint1):
+   tl0 =-24*joint1
+   return [sp.simplify(tl0)]
+
 
 def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
    tendon_lengths = []
@@ -59,7 +63,7 @@ def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
       tl0 = sp.simplify(tl0)
 
       # CMC flexion (thumb)
-      tl1 = tendon_length_pin_joint(theta2, radius_mm[1][0])
+      tl1 = tendon_length_rolling_contact(theta2, alpha_deg[1][0], alpha_deg[1][1], radius_mm[1][0], radius_mm[1][1])
       tl1 = sp.simplify(tl1)
 
       # PIP flexion

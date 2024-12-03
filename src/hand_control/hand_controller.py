@@ -80,7 +80,7 @@ class HandController:
         config_yml: str = "hand_defs.yaml",
         init_motor_pos_update_thread: bool = True,
         compliant_test_mode: bool = False,
-        max_motor_current: float = 200.0,
+        max_motor_current: float = 0.1,
         dummy_mode: bool = False,
         baudrate: int = 3000000
     ):
@@ -97,6 +97,7 @@ class HandController:
         self.keep_running.set()
 
         self.operating_mode = -1
+        print("initing handcontroller")
 
         self.init_motor_pos_update_thread = init_motor_pos_update_thread
         self.compliant_test_mode = compliant_test_mode
@@ -119,7 +120,7 @@ class HandController:
                 baudrate=baudrate,
                 lazy_connect=True,
             )
-
+        
         print(f"GC Motor IDs: {self.motor_ids}")
         print(f"DxC Motor IDs: {self._dxc.motor_ids}")
 
@@ -283,18 +284,22 @@ class HandController:
             joint_pos_begin_idx = joint_pos_end_idx
         return motor_positions
 
-    def pose2motors_sym(self, joint1, joint2, joint3, joint4=None, muscle_group=None):
+    def pose2motors_sym(self, joint1, joint2=None, joint3=None, joint4=None, muscle_group=None):
         """
         return symbolic function for joint position -> motor position, for a single muscle group (i.e. single finger)
         Input: joint angles
         Output: motor positions
         """
-        tendon_lengths = fk.get_tendon_lengths_lambda(
-            joint1, joint2, joint3, muscle_group
-        )
-        motor_pos = self.tendon_pos2motor_pos_sym(
-            tendon_lengths, muscle_group=muscle_group
-        )
+
+        if muscle_group.name =='wrist':
+            tendon_lengths=fk.get_tendon_length_lambda_wrist(joint1)
+            motor_pos =self.tendon_pos2motor_pos_sym(tendon_lengths, muscle_group)
+        else:
+            tendon_lengths = fk.get_tendon_lengths_lambda(
+            joint1, joint2, joint3, muscle_group)
+            motor_pos = self.tendon_pos2motor_pos_sym(
+            tendon_lengths, muscle_group=muscle_group)
+            
         return motor_pos
 
     def update_motorinitpos(self):
@@ -322,8 +327,8 @@ class HandController:
         Set the offsets based on the current (initial) motor positions
         :param calibrate: if True, perform calibration and set the offsets else move to the initial position
         """
-
-        calib_current = 60  # mA
+        print("in init joints function")
+        calib_current = 0.1  # mA
 
         cal_yaml_fname = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "cal.yaml"
@@ -331,6 +336,7 @@ class HandController:
         cal_exists = os.path.isfile(cal_yaml_fname)
 
         if not calibrate and cal_exists:
+            print("Currently here")
 
             # Load the calibration file
             with open(cal_yaml_fname, "r") as cal_file:
@@ -342,38 +348,58 @@ class HandController:
         else:
             # Disable torque to allow the motors to move freely
             self.disable_torque()
-            input("Move fingers to init position and press Enter to continue...")
+            #input("init joints Move fingers to init position")
+            print("init joints Move fingers to init position")
             time.sleep(1)  # give some time to hold fingers
-            self.enable_torque()
+            print("enable torque")
+            time.sleep(2)  # give some time to hold fingers
+            
 
             # Set to current control mode and pull on all tendons (while the user holds the fingers in the init position)
+            print("set operating mode")
+            time.sleep(4)  # give some time to hold fingers
             self.set_operating_mode(0)
+            time.sleep(4)  # give some time to hold fingers
+            print("write current")
+          
+
+            print(calib_current)
+            print(self.max_motor_current)
             self.write_desired_motor_current(
                 calib_current * np.ones(len(self.motor_ids))
             )
-            time.sleep(2)
+            
+            time.sleep(4)
+            self.enable_torque()
 
             # after pulling for a while, set the motor_init_pos
             self.update_motorinitpos()
+            
 
         self.motor_pos_norm = self.pose2motors(np.deg2rad(self.calib_pose))
         if self.init_motor_pos_update_thread:
+            print("motor update thread")
             # start a thread to update the motor positions
             self.motor_pos_update_thread = Thread(target=self._update_motor_status_loop)
             self.motor_pos_update_thread.start()
 
         if self.compliant_test_mode:
             print("Setting compliant test mode! This disables position control.")
-            self.set_operating_mode(0)
+            self.set_operating_mode(5)
             self.write_desired_motor_current(20 * np.ones(len(self.motor_ids)))
         else:
             # start position control
+            print("stuffing stuff")
+            time.sleep(4)
             self.set_operating_mode(5)
+            print("printy print")
+            time.sleep(4)
             self.write_desired_motor_current(
                 self.max_motor_current * np.ones(len(self.motor_ids))
             )
             print(f"Move to init pose: {self.motor_init_pos}")
             self.write_desired_motor_pos(self.motor_init_pos)
+            assert(False)
 
     def command_joint_angles(self, joint_angles_deg: np.array):
         """

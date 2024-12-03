@@ -138,8 +138,8 @@ class DummyDynamixelClient:
             )
         self.motor_positions[:] = motor_positions_rad
 
-    def write_desired_current(self, motor_ids, motor_currents_mA):
-        pass
+    #def write_desired_current(self, motor_ids, motor_currents_mA):
+       # pass
 
     def connect(self):
         print(f"Connected to DUMMY Dynamixel motors: {self.motor_ids}")

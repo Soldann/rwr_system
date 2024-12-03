@@ -17,16 +17,18 @@ class HandControllerNode(Node):
 
         port = self.get_parameter("hand_controller/port").value
         baudrate = self.get_parameter("hand_controller/baudrate").value
-
+        self.get_logger().info('init handcontroller')
+        
         self._hc = HandController(port=port, baudrate=baudrate)
+        self.get_logger().info("starting to init joints")
 
-        self._hc.init_joints(calibrate=False)
+        self._hc.init_joints(calibrate=True)
         self.joint_angle_sub = self.create_subscription(
             Float32MultiArray, "/hand/policy_output", self.joint_angle_cb, 10
         )
 
     def joint_angle_cb(self, msg):
-        assert len(msg.data) == 15, "Expected 15 joint angles, got {}".format(
+        assert len(msg.data) == 16, "Expected 15 joint angles, got {}".format(
             len(msg.data)
         )
         joint_angles = np.array(msg.data)
@@ -35,6 +37,7 @@ class HandControllerNode(Node):
 
 
 def main(args=None):
+    
     rclpy.init(args=args)
     node = HandControllerNode()
     
