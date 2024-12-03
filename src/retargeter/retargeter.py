@@ -359,11 +359,15 @@ class Retargeter:
                     torch.tensor(self.gc_limits_upper).to(self.device),
                 )
 
+        fingertips_return = {k: v.detach().cpu().numpy() for k, v in fingertips.items()}
+        palm_return = palm.detach().cpu().numpy()
+        keyvectors_mano_return = {k: v.detach().cpu().numpy() for k, v in keyvectors_mano.items()}
+        keyvector_faive_return = {k: v.detach().cpu().numpy() for k, v in keyvectors_faive.items()}
         finger_joint_angles = self.gc_joints.detach().cpu().numpy()
 
         print(f"Retarget time: {(time.time() - start_time) * 1000} ms")
 
-        return finger_joint_angles
+        return finger_joint_angles, fingertips_return, palm_return, keyvectors_mano_return, keyvector_faive_return
 
 
     def adjust_mano_fingers(self, joints):
@@ -443,5 +447,5 @@ class Retargeter:
         )
         if debug_dict is not None:
             debug_dict["normalized_joint_pos"] = normalized_joint_pos
-        self.target_angles = self.retarget_finger_mano_joints(normalized_joint_pos)
-        return self.target_angles, debug_dict
+        self.target_angles, fingertips, palm, keyvectors_mano, keyvectors_faive = self.retarget_finger_mano_joints(normalized_joint_pos)
+        return self.target_angles, debug_dict, fingertips, palm, keyvectors_mano, keyvectors_faive

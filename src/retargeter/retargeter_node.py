@@ -11,6 +11,7 @@ from faive_system.src.common.utils import numpy_to_float32_multiarray
 import os
 from faive_system.src.viz.visualize_mano import ManoHandVisualizer
 import time
+from visualize_retargeter import KeyvectorVisualizer
 
 class RetargeterNode(Node):
     def __init__(self, debug=False):
@@ -68,6 +69,9 @@ class RetargeterNode(Node):
         if self.debug:
             self.rviz_pub = self.create_publisher(MarkerArray, 'retarget/normalized_mano_points', 10)
             self.mano_hand_visualizer = ManoHandVisualizer(self.rviz_pub)
+
+            self.rviz_pub_keyvectors = self.create_publisher(MarkerArray, 'retarget/keyvectors', 10)
+            self.keyvector_visualizer = KeyvectorVisualizer(self.rviz_pub_keyvectors)
         
         self.timer = self.create_timer(0.005, self.timer_publish_cb)
         self.keypoint_positions = None
@@ -86,33 +90,38 @@ class RetargeterNode(Node):
             print("No keypoints received yet")
             time.sleep(1)
             return
-        try:
-            if self.debug:
-                self.mano_hand_visualizer.reset_markers()
+        # try:
+        if self.debug:
+            self.mano_hand_visualizer.reset_markers()
+            self.keyvector_visualizer.reset_markers()
 
-            debug_dict = {}
-            joint_angles, debug_dict = self.retargeter.retarget(self.keypoint_positions, debug_dict)
+        debug_dict = {}
+        joint_angles, debug_dict, fingertips, palm, keyvectors_mano, keyvectors_faive = self.retargeter.retarget(self.keypoint_positions, debug_dict)
 
-            if self.debug:
-                self.mano_hand_visualizer.generate_hand_markers(
-                    debug_dict["normalized_joint_pos"],
-                    stamp=self.get_clock().now().to_msg(),
-                )
-
-            if self.wrist_positions and False:
-                wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
-            else:
-                wrist_angle = np.array([0])
-            # joint_angles = np.concatenate((joint_angles,wrist_angle))
-            self.joints_pub.publish(
-                numpy_to_float32_multiarray(np.deg2rad(joint_angles))
+        if self.debug:
+            self.mano_hand_visualizer.generate_hand_markers(
+                debug_dict["normalized_joint_pos"],
+                stamp=self.get_clock().now().to_msg(),
             )
 
-            if self.debug:
-                self.mano_hand_visualizer.publish_markers()
-        except Exception as e:
-            print(f"Error in timer_publish_cb: {e}")
-            pass
+            self.keyvector_visualizer.generate_hand_markers(fingertips, stamp=self.get_clock().now().to_msg())
+            self.keyvector_visualizer.generate_keyvectors(keyvectors_faive, palm, stamp=self.get_clock().now().to_msg())
+
+        if self.wrist_positions and False:
+            wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
+        else:
+            wrist_angle = np.array([0])
+        # joint_angles = np.concatenate((joint_angles,wrist_angle))
+        self.joints_pub.publish(
+            numpy_to_float32_multiarray(np.deg2rad(joint_angles))
+        )
+
+        if self.debug:
+            self.mano_hand_visualizer.publish_markers()
+            self.keyvector_visualizer.publish_markers()
+        # except Exception as e:
+        #     print(f"Error in timer_publish_cb: {e}")
+        #     pass
 
 
 def main(args=None):
