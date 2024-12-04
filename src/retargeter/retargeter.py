@@ -359,11 +359,14 @@ class Retargeter:
         palm_return = palm.detach().cpu().numpy()
         keyvectors_mano_return = {k: v.detach().cpu().numpy() for k, v in keyvectors_mano.items()}
         keyvector_faive_return = {k: v.detach().cpu().numpy() for k, v in keyvectors_faive.items()}
+        kinematics_chain = {k: v.transform_points(
+                    self.root
+                ).detach().cpu().numpy() for k, v in chain_transforms.items()}
         finger_joint_angles = self.gc_joints.detach().cpu().numpy()
 
         print(f"Retarget time: {(time.time() - start_time) * 1000} ms")
 
-        return finger_joint_angles, fingertips_return, palm_return, keyvectors_mano_return, keyvector_faive_return
+        return finger_joint_angles, fingertips_return, palm_return, keyvectors_mano_return, keyvector_faive_return, kinematics_chain
 
 
     def adjust_mano_fingers(self, joints):
@@ -441,11 +444,12 @@ class Retargeter:
         normalized_joint_pos = (
             normalized_joint_pos @ self.model_rotation.T + self.model_center
         )
-        self.target_angles, fingertips, palm, keyvectors_mano, keyvectors_faive = self.retarget_finger_mano_joints(normalized_joint_pos)
+        self.target_angles, fingertips, palm, keyvectors_mano, keyvectors_faive, kinematics_chain = self.retarget_finger_mano_joints(normalized_joint_pos)
         if debug_dict is not None:
             debug_dict["normalized_joint_pos"] = normalized_joint_pos
             debug_dict["fingertips"] = fingertips
             debug_dict["palm"] = palm
             debug_dict["keyvectors_mano"] = keyvectors_mano
             debug_dict["keyvectors_faive"] = keyvectors_faive
+            debug_dict["kinematics_chain"] = kinematics_chain
         return self.target_angles, debug_dict

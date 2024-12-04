@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from visualization_msgs.msg import Marker, MarkerArray
-from geometry_msgs.msg import Point
+from geometry_msgs.msg import Point, Pose, Quaternion
 import numpy as np
 
 
@@ -68,12 +68,34 @@ class KeyvectorVisualizer:
         joint_marker.color.g = 1.0  # red color
 
         # Add joint points
-        for point in keypoints.values():
+        for name, point in keypoints.items():
             point = point.flatten()
             point = float(point[0]), float(point[1]), float(point[2])
             p = Point(x=point[0], y=point[1], z=point[2])
             joint_marker.points.append(p)
 
+            label_marker = Marker()
+            label_marker.header.frame_id = "root"
+            label_marker.header.stamp = stamp
+            label_marker.ns = "labels"
+            label_marker.type = Marker.TEXT_VIEW_FACING
+            label_marker.action = Marker.ADD
+            label_marker.scale.z = 0.005  # Text Height
+            label_marker.color.a = 0.8
+            label_marker.color.r = 1.0  # black color
+            label_marker.color.g = 1.0  # black color
+            label_marker.color.b = 1.0  # black color
+            label_marker.text = name
+            q = Quaternion()
+            q.w = 1.0
+            q.x = 0.0
+            q.y = 0.0
+            q.z = 0.0
+            label_marker.pose = Pose() # initialize with same point value and identity quaternion
+            label_marker.pose.position = p
+            label_marker.pose.orientation = q
+
+            markers.append(label_marker)
         markers.append(joint_marker)
         self.markers.extend(markers)
 

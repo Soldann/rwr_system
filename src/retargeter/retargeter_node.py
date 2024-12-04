@@ -112,6 +112,10 @@ class RetargeterNode(Node):
                 debug_dict["fingertips"],
                 stamp=self.get_clock().now().to_msg()
             )
+            self.keyvector_visualizer.generate_hand_markers(
+                debug_dict["kinematics_chain"],
+                stamp=self.get_clock().now().to_msg()
+            )
             self.keyvector_visualizer.generate_keyvectors(
                 debug_dict["keyvectors_faive"],
                 debug_dict["palm"],
