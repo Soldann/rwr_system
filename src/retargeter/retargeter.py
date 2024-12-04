@@ -295,8 +295,6 @@ class Retargeter:
         )
 
         keyvectors_mano = retarget_utils.get_keyvectors(mano_fingertips, mano_palm)
-        print("mano")
-        print(keyvectors_mano["palm2thumb"], keyvectors_mano["palm2index"])
         # norms_mano = {k: torch.norm(v) for k, v in keyvectors_mano.items()}
         # print(f"keyvectors_mano: {norms_mano}")
 
@@ -320,8 +318,6 @@ class Retargeter:
             ) / 2
 
             keyvectors_faive = retarget_utils.get_keyvectors(fingertips, palm)
-            print("faive")
-            print(keyvectors_faive["palm2thumb"], keyvectors_faive["palm2index"])
             # norms_faive = {k: torch.norm(v) for k, v in keyvectors_faive.items()}
             # print(f"keyvectors_faive: {norms_faive}")
 
@@ -445,7 +441,11 @@ class Retargeter:
         normalized_joint_pos = (
             normalized_joint_pos @ self.model_rotation.T + self.model_center
         )
+        self.target_angles, fingertips, palm, keyvectors_mano, keyvectors_faive = self.retarget_finger_mano_joints(normalized_joint_pos)
         if debug_dict is not None:
             debug_dict["normalized_joint_pos"] = normalized_joint_pos
-        self.target_angles, fingertips, palm, keyvectors_mano, keyvectors_faive = self.retarget_finger_mano_joints(normalized_joint_pos)
-        return self.target_angles, debug_dict, fingertips, palm, keyvectors_mano, keyvectors_faive
+            debug_dict["fingertips"] = fingertips
+            debug_dict["palm"] = palm
+            debug_dict["keyvectors_mano"] = keyvectors_mano
+            debug_dict["keyvectors_faive"] = keyvectors_faive
+        return self.target_angles, debug_dict

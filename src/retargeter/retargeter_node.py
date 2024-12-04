@@ -96,7 +96,7 @@ class RetargeterNode(Node):
             self.keyvector_visualizer.reset_markers()
 
         debug_dict = {}
-        joint_angles, debug_dict, fingertips, palm, keyvectors_mano, keyvectors_faive = self.retargeter.retarget(self.keypoint_positions, debug_dict)
+        joint_angles, debug_dict = self.retargeter.retarget(self.keypoint_positions, debug_dict)
 
         if self.debug:
             self.mano_hand_visualizer.generate_hand_markers(
@@ -104,8 +104,19 @@ class RetargeterNode(Node):
                 stamp=self.get_clock().now().to_msg(),
             )
 
-            self.keyvector_visualizer.generate_hand_markers(fingertips, stamp=self.get_clock().now().to_msg())
-            self.keyvector_visualizer.generate_keyvectors(keyvectors_faive, palm, stamp=self.get_clock().now().to_msg())
+            self.keyvector_visualizer.generate_hand_markers(
+                {"palm": debug_dict["palm"]},
+                stamp=self.get_clock().now().to_msg()
+            )
+            self.keyvector_visualizer.generate_hand_markers(
+                debug_dict["fingertips"],
+                stamp=self.get_clock().now().to_msg()
+            )
+            self.keyvector_visualizer.generate_keyvectors(
+                debug_dict["keyvectors_faive"],
+                debug_dict["palm"],
+                stamp=self.get_clock().now().to_msg()
+            )
 
         if self.wrist_positions and False:
             wrist_angle = self.quat2yaw(self.wrist_positions.orientation)

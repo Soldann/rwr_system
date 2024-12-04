@@ -23,18 +23,22 @@ class KeyvectorVisualizer:
 
     def generate_keyvectors(self, keyvectors, origin, stamp):
         markers = []
-        bone_marker = Marker()
-        bone_marker.header.frame_id = "root"
-        bone_marker.header.stamp = stamp
-        bone_marker.ns = "bones"
-        bone_marker.type = Marker.ARROW
-        bone_marker.action = Marker.ADD
-        bone_marker.scale.x = 0.005  # Line width
-        bone_marker.color.a = 1.0
-        bone_marker.color.r = 1.0  # Red color
-
+    
         # Add bone lines
-        for vector in keyvectors.values():
+        for vector_name, vector in keyvectors.items():
+            bone_marker = Marker()
+            bone_marker.header.frame_id = "root"
+            bone_marker.header.stamp = stamp
+            bone_marker.ns = vector_name
+            bone_marker.type = Marker.ARROW
+            bone_marker.action = Marker.ADD
+            bone_marker.scale.x = 0.005  # Line width
+            bone_marker.scale.y = 0.010  # Head width
+            bone_marker.scale.z = 0.015  # Length width
+            bone_marker.color.a = 1.0
+            bone_marker.color.r = 1.0  # Red color
+            # print("origin", origin)
+            # print(vector)
             start_joint = origin.flatten()
             end_joint = vector.flatten()
             start_joint = float(start_joint[0]), float(start_joint[1]), float(start_joint[2])
@@ -44,7 +48,7 @@ class KeyvectorVisualizer:
             bone_marker.points.append(p_start)
             bone_marker.points.append(p_end)
 
-        markers.append(bone_marker)
+            markers.append(bone_marker)
 
         self.markers.extend(markers)
 
