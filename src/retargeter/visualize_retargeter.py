@@ -42,7 +42,7 @@ class KeyvectorVisualizer:
             start_joint = origin.flatten()
             end_joint = vector.flatten()
             start_joint = float(start_joint[0]), float(start_joint[1]), float(start_joint[2])
-            end_joint = float(end_joint[0]), float(end_joint[1]), float(end_joint[2])
+            end_joint = float(start_joint[0] + end_joint[0]), float(start_joint[1] + end_joint[1]), float(start_joint[2] + end_joint[2])
             p_start = Point(x=start_joint[0], y=start_joint[1], z=start_joint[2])
             p_end = Point(x=end_joint[0], y=end_joint[1], z=end_joint[2])
             bone_marker.points.append(p_start)
