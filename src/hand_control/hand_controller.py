@@ -216,7 +216,7 @@ class HandController:
             t_idx += t_nr
         return self.tendon_pos2motor_pos(tendon_lengths)
 
-    def init_joints(self, calibrate: bool = False, maxCurrent: int = 150):
+    def init_joints(self, calibrate: bool = True, maxCurrent: int = 10):
         """
         Set the offsets based on the current (initial) motor positions
         :param calibrate: if True, perform calibration and set the offsets else move to the initial position
@@ -256,9 +256,11 @@ class HandController:
 
             print(f"Motor positions after calibration (0-10): {self.motor_id2init_pos}")
             # Set to current based position control mode
-            self.set_operating_mode(5)
+            self.set_operating_mode(0)
             self.write_desired_motor_current(maxCurrent * np.ones(len(self.motor_ids)))
             time.sleep(0.2)
+            print("CAL END")
+            assert False
 
             # Save the offsets to a YAML file
             with open(cal_yaml_fname, 'r') as cal_file:

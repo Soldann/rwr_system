@@ -4,8 +4,9 @@ from rclpy.node import Node
 import numpy as np
 from std_msgs.msg import Float32MultiArray, MultiArrayDimension, MultiArrayLayout
 import os
-from faive_system.src.hand_control import HandController
-
+import sys
+sys.path.append('/home/jamesearljone/ros2_ws/src/real-world-robotics/ros/src/rwr_system/src')
+from hand_control.hand_controller import HandController
 
 class HandControllerNode(Node):
     def __init__(self, debug=False):
@@ -18,9 +19,9 @@ class HandControllerNode(Node):
         port = self.get_parameter("hand_controller/port").value
         baudrate = self.get_parameter("hand_controller/baudrate").value
 
-        self._hc = HandController(port=port, baudrate=baudrate)
+        self._hc = HandController(port=port)
 
-        self._hc.init_joints(calibrate=False)
+        self._hc.init_joints(calibrate=True)
         self.joint_angle_sub = self.create_subscription(
             Float32MultiArray, "/hand/policy_output", self.joint_angle_cb, 10
         )

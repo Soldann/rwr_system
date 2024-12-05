@@ -59,6 +59,7 @@
          <inertia ixx="1e-09" iyy="1e-09" izz="1e-09" ixy="0" ixz="0" iyz="0"/>
       </inertial>
    </link>
+   <!-- heloooooooo -->
    <joint type="revolute" name="root2thumb_base">
       <parent link="palm"/>
       <child link="root2thumb_base_jointbody"/>

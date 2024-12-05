@@ -1,12 +1,5 @@
 <?xml version="1.0" ?>
 <robot name="converted_robot">
-   <link name="world">
-      <inertial>
-         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-         <mass value="0.0"/>
-         <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0" ixz="0" iyz="0"/>
-      </inertial>
-   </link>
    <link name="root">
       <inertial>
          <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -14,23 +7,6 @@
          <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0" ixz="0" iyz="0"/>
       </inertial>
    </link>
-   <link name="world2root_fixed_jointbody">
-      <inertial>
-         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-         <mass value="0.001"/>
-         <inertia ixx="1e-09" iyy="1e-09" izz="1e-09" ixy="0" ixz="0" iyz="0"/>
-      </inertial>
-   </link>
-   <joint type="fixed" name="world2root_fixed">
-      <parent link="world"/>
-      <child link="world2root_fixed_jointbody"/>
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-   </joint>
-   <joint type="fixed" name="world2root_fixed_offset">
-      <parent link="world2root_fixed_jointbody"/>
-      <child link="root"/>
-      <origin xyz="-0.0 -0.0 -0.0" rpy="0.0 0.0 0.0"/>
-   </joint>
    <link name="tower">
       <inertial>
          <origin xyz="-0.012935936040143856 -0.1250798428773428 -0.0001711974765966958" rpy="1.5378790315260968 -1.5027760115029016 -2.9935622097884105"/>
@@ -164,6 +140,7 @@
       <child link="palm"/>
       <origin xyz="-0.0 -0.0 -0.0" rpy="0.0 0.0 0.0"/>
    </joint>
+   <!-- THUMB START -->
    <link name="thumb_base">
       <inertial>
          <origin xyz="-0.05388722858794558 -0.08972924545530461 0.0056400640968846715" rpy="1.1981321937913696 -1.4948979105066995 0.7661853183228415"/>
@@ -171,7 +148,8 @@
          <inertia ixx="4.057013831282678e-06" iyy="3.3189900464939896e-06" izz="1.0886313012479005e-06" ixy="0" ixz="0" iyz="0"/>
       </inertial>
       <visual name="thumb_base">
-         <origin xyz="-0.05388722858794558 -0.08972924545530461 0.0056400640968846715" rpy="1.1981321937913676 -1.4948979105066995 0.7661853183228435"/>
+         <!-- <origin xyz="-0.05388722858794558 -0.08972924545530461 0.0056400640968846715" rpy="1.1981321937913676 -1.4948979105066995 0.7661853183228435"/> -->
+         <origin xyz="0.01388722858794558 -0.02372924545530461 -0.0026400640968846715" rpy="1.1981321937913676 -1.4948979105066995 0.7661853183228435"/>
          <geometry>
             <mesh filename="package://viz/models/URDF_Simulation/converted_thumb_base.stl"/>
          </geometry>
@@ -185,9 +163,11 @@
          <inertia ixx="1e-09" iyy="1e-09" izz="1e-09" ixy="0" ixz="0" iyz="0"/>
       </inertial>
    </link>
+   <!-- THUMB -->
    <joint type="revolute" name="root2thumb_base">
       <parent link="palm"/>
       <child link="root2thumb_base_jointbody"/>
+      <!-- <origin xyz="0.01810025051214078 0.00810024353395844 0.002000000000000001" rpy="0.0 0.0 1.5707999999999998"/> -->
       <origin xyz="0.01810025051214078 0.00810024353395844 0.002000000000000001" rpy="0.0 0.0 1.5707999999999998"/>
       <axis xyz="-0.872045190552692 0.48942536267945813 0.0"/>
       <limit lower="0.0" upper="2.27" effort="100" velocity="100"/>
@@ -195,42 +175,57 @@
    <joint type="fixed" name="root2thumb_base_offset">
       <parent link="root2thumb_base_jointbody"/>
       <child link="thumb_base"/>
-      <origin xyz="0.0682 0.0663 -0.009" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="0.0682 0.0663 -0.009" rpy="0.0 0.0 0.0"/> -->
+      <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
    </joint>
+<!-- GSIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII -->
+
+   <!-- THUMBBB -->
    <link name="thumb_um_virt">
       <inertial>
-         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+         <origin xyz="0.01388722858794558 -0.00372924545530461 -0.0026400640968846715" rpy="0.0 0.0 0.0"/>
          <mass value="0.001"/>
          <inertia ixx="4e-10" iyy="4e-10" izz="3e-10" ixy="0" ixz="0" iyz="0"/>
       </inertial>
    </link>
    <link name="thumb_abd_virt_jointbody">
       <inertial>
-         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+         <origin xyz="0.01388722858794558 -0.00372924545530461 -0.0026400640968846715" rpy="0.0 0.0 0.0"/>
          <mass value="0.001"/>
          <inertia ixx="1e-09" iyy="1e-09" izz="1e-09" ixy="0" ixz="0" iyz="0"/>
       </inertial>
    </link>
+   
+<!-- MIDDLE THUMB -->
    <joint type="revolute" name="thumb_abd_virt">
       <parent link="thumb_base"/>
       <child link="thumb_abd_virt_jointbody"/>
-      <origin xyz="-0.05696 -0.11383 0.0" rpy="0.0 0.0 0.0"/>
+      <origin xyz="0.01388722858794558 -0.0472924545530461 -0.0026400640968846715" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="-0.05696 -0.11383 0.0" rpy="0.0 0.0 0.0"/> -->
       <axis xyz="0.0 0.0 1.0"/>
       <limit lower="-0.523599" upper="0.523599" effort="100" velocity="100"/>
    </joint>
+
+   
    <joint type="fixed" name="thumb_abd_virt_offset">
       <parent link="thumb_abd_virt_jointbody"/>
       <child link="thumb_um_virt"/>
-      <origin xyz="0.05696 0.11383 -0.0" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="0.05696 0.11383 -0.0" rpy="0.0 0.0 0.0"/> -->
+      <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
    </joint>
+
+   
    <link name="thumb_um">
       <inertial>
-         <origin xyz="-0.06002974424873159 -0.11906183356660797 0.0062186112018148216" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/>
+         <!-- <origin xyz="0.06002974424873159 0.11906183356660797 0.0062186112018148216" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/> -->
+         <!-- <origin xyz="-0.06002974424873159 -0.02906183356660797 0.0062186112018148216" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/> -->
+         <origin xyz="-0. -0.0 0." rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/>
          <mass value="0.0020561829545655487"/>
          <inertia ixx="5.3193394084926844e-08" iyy="4.4699706473833634e-08" izz="4.1958930900945313e-08" ixy="0" ixz="0" iyz="0"/>
       </inertial>
       <visual name="thumb_um">
-         <origin xyz="-0.06002974424873159 -0.11906183356660797 0.0062186112018148216" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/>
+         <origin xyz="0.0 -0.05 -0.0" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/>
+         <!-- <origin xyz="-0.06002974424873159 -0.04906183356660797 0.0062186112018148216" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/> -->
          <geometry>
             <mesh filename="package://viz/models/URDF_Simulation/converted_thumb_um.stl"/>
          </geometry>
@@ -239,7 +234,8 @@
    </link>
    <link name="thumb_abd_jointbody">
       <inertial>
-         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+         <origin xyz="-0.06002974424873159 -0.001906183356660797 0.0062186112018148216" rpy="-0.0012484400387758887 0.391076545340286 1.0465689521908192"/>
+         <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/> -->
          <mass value="0.001"/>
          <inertia ixx="1e-09" iyy="1e-09" izz="1e-09" ixy="0" ixz="0" iyz="0"/>
       </inertial>
@@ -247,25 +243,33 @@
    <joint type="revolute" name="thumb_abd">
       <parent link="thumb_um_virt"/>
       <child link="thumb_abd_jointbody"/>
-      <origin xyz="-0.05696 -0.11383 0.0" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/> -->
+      <origin xyz="-0.05696 -0.011383 0.0" rpy="0.0 0.0 0.0"/>
       <axis xyz="0.0 0.0 1.0"/>
       <limit lower="-0.523599" upper="0.523599" effort="100" velocity="100"/>
    </joint>
    <joint type="fixed" name="thumb_abd_offset">
       <parent link="thumb_abd_jointbody"/>
       <child link="thumb_um"/>
-      <origin xyz="0.05696 0.11383 -0.0" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="0.05696 0.11383 -0.0" rpy="0.0 0.0 0.0"/> -->
+      <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
    </joint>
+
+
+
+
+   <!-- NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO -->
    <link name="thumb_mp_virt">
       <inertial>
-         <origin xyz="0.009525 -0.041187 0.083647" rpy="-0.22291598477092758 -1.2682876286119864 0.3020329839181935"/>
+         <!-- <origin xyz="0.009525 -0.041187 0.083647" rpy="-0.22291598477092758 -1.2682876286119864 0.3020329839181935"/> -->
+         <origin xyz="0.01388722858794558 -0.02372924545530461 -0.0026400640968846715" rpy="-0.22291598477092758 -1.2682876286119864 0.3020329839181935"/>
          <mass value="0.001"/>
          <inertia ixx="4e-10" iyy="4e-10" izz="3e-10" ixy="0" ixz="0" iyz="0"/>
       </inertial>
    </link>
    <link name="thumb_um2mp_virt_jointbody">
       <inertial>
-         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+         <origin xyz="0.01388722858794558 -0.02372924545530461 -0.0026400640968846715" rpy="0.0 0.0 0.0"/>
          <mass value="0.001"/>
          <inertia ixx="1e-09" iyy="1e-09" izz="1e-09" ixy="0" ixz="0" iyz="0"/>
       </inertial>
@@ -273,15 +277,18 @@
    <joint type="revolute" name="thumb_um2mp_virt">
       <parent link="thumb_um"/>
       <child link="thumb_um2mp_virt_jointbody"/>
-      <origin xyz="-0.072947 -0.114166 0.008" rpy="0.0 0.0 0.0"/>
+      <origin xyz="-0.0 -0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="-0.072947 -0.114166 0.008" rpy="0.0 0.0 0.0"/> -->
       <axis xyz="-0.872045190552692 0.48942536267945813 0.0"/>
       <limit lower="-0.16" upper="1.308" effort="100" velocity="100"/>
    </joint>
    <joint type="fixed" name="thumb_um2mp_virt_offset">
       <parent link="thumb_um2mp_virt_jointbody"/>
       <child link="thumb_mp_virt"/>
-      <origin xyz="0.072947 0.114166 -0.008" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="0.072947 0.114166 -0.008" rpy="0.0 0.0 0.0"/> -->
+      <origin xyz="0.0 0.0 -0.0" rpy="0.0 0.0 0.0"/>
    </joint>
+
    <link name="thumb_mp">
       <inertial>
          <origin xyz="-0.07215929044573305 -0.14052795432320075 0.00551798779969882" rpy="2.9311721332498637 -1.5138717843315774 -1.881310598490373"/>
@@ -289,7 +296,8 @@
          <inertia ixx="9.573996733464855e-07" iyy="9.284932904903027e-07" izz="1.7221260520814514e-07" ixy="0" ixz="0" iyz="0"/>
       </inertial>
       <visual name="thumb_mp">
-         <origin xyz="-0.07215929044573305 -0.14052795432320075 0.00551798779969882" rpy="2.9311721332498664 -1.5138717843315772 -1.8813105984903749"/>
+         <origin xyz="0.01388722858794558 -0.02372924545530461 -0.0026400640968846715" rpy="2.9311721332498664 -1.5138717843315772 -1.8813105984903749"/>
+         <!-- <origin xyz="-0.07215929044573305 -0.14052795432320075 0.00551798779969882" rpy="2.9311721332498664 -1.5138717843315772 -1.8813105984903749"/> -->
          <geometry>
             <mesh filename="package://viz/models/URDF_Simulation/converted_thumb_mp.stl"/>
          </geometry>
@@ -313,8 +321,14 @@
    <joint type="fixed" name="thumb_um2mp_offset">
       <parent link="thumb_um2mp_jointbody"/>
       <child link="thumb_mp"/>
-      <origin xyz="0.062947 0.124166 -0.008" rpy="0.0 0.0 0.0"/>
+      <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+      <!-- <origin xyz="0.062947 0.124166 -0.008" rpy="0.0 0.0 0.0"/> -->
    </joint>
+
+
+
+
+   <!-- THUMB END -->
    <link name="index_um_virt">
       <inertial>
          <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
