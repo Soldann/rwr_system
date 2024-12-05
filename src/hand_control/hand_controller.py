@@ -80,7 +80,7 @@ class HandController:
         config_yml: str = "hand_defs.yaml",
         init_motor_pos_update_thread: bool = True,
         compliant_test_mode: bool = False,
-        max_motor_current: float = 200.0,
+        max_motor_current: float = 90.0,
         dummy_mode: bool = False,
         baudrate: int = 3000000
     ):
@@ -323,7 +323,7 @@ class HandController:
         :param calibrate: if True, perform calibration and set the offsets else move to the initial position
         """
 
-        calib_current = 60  # mA
+        calib_current = 40  # mA
 
         cal_yaml_fname = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "cal.yaml"
@@ -347,25 +347,29 @@ class HandController:
             #fir eischt setzen mer motor current erof vun all motor
             self.set_operating_mode(5)
             self.write_desired_motor_current(calib_current*np.ones(len(self.motor_ids)))
-            current_motor_current = self.get_motor_cur()
-            print(f"current motor current = {current_motor_current}")
-            time.sleep(2)
+            print(f"current motor current = {self.get_motor_cur()}")
+            time.sleep(4)
             #dann setzen mer eng wait eweg distanz vun den motor relativ
-            current_motor_pos = self.get_motor_pos()
-            print(f"current motor pos = {current_motor_pos}")
+            print(f"current motor pos = {self.get_motor_pos()}")
             time.sleep(2)
             print(f"writing motor position")
             time.sleep(2)
             self.enable_torque()
-            self.write_desired_motor_pos(current_motor_pos + 6) #in radians this is far away
+            self.write_desired_motor_pos(self.get_motor_pos() - 6) #in radians this is far away
             #dann wann geschwindegkeet lues ass haalen mer ob -> tendons sinn gestretcht
-            vel_threshold = 0.5
+            vel_threshold = 0.1
+            vel_threshold2 = 0.2
+            while np.all(np.abs(self.get_motor_vel()) < vel_threshold2):
+                print("waiting for motors to start up")
+                time.sleep(0.1)
+            
             print("presetnt vel", self.get_motor_vel() )
-            while np.all(self.get_motor_vel() > vel_threshold):
+            while np.all(np.abs(self.get_motor_vel()) > vel_threshold):
                 print(f"current velocity = {self.get_motor_vel()}")
-                time.sleep(0.2)
-                
+            print("present position: ", self.get_motor_pos())
+            time.sleep(1)
             self.update_motorinitpos()
+
             print(f"new motor position = {self.motor_init_pos}")
             
             # finally wärt d'init position ennen gesaat ginn
@@ -382,10 +386,10 @@ class HandController:
             # self.update_motorinitpos()
 
         self.motor_pos_norm = self.pose2motors(np.deg2rad(self.calib_pose))
-        # if self.init_motor_pos_update_thread:
-        #     # start a thread to update the motor positions
-        #     self.motor_pos_update_thread = Thread(target=self._update_motor_status_loop)
-        #     self.motor_pos_update_thread.start()
+        if self.init_motor_pos_update_thread:
+            # start a thread to update the motor positions
+            self.motor_pos_update_thread = Thread(target=self._update_motor_status_loop)
+            self.motor_pos_update_thread.start()
 
         if self.compliant_test_mode:
             print("Setting compliant test mode! This disables position control.")
@@ -428,7 +432,8 @@ class HandController:
         """
         Update the motor angles and joint angle estimates.
         """
-        motor_pos_array, motor_vel_array, _ = self._get_motor_pos_vel_cur()
+        motor_pos_array =self.get_motor_pos()
+        motor_vel_array= self.get_motor_vel()
         motor_pos_array += self.motor_pos_norm - self.motor_init_pos
         motor_pos_begin_idx = 0
         joint_pos_begin_idx = 0

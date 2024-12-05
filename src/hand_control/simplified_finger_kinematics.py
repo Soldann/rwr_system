@@ -87,6 +87,6 @@ def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
 
       # Add MCP abduction length to MCP flexion length
       # since they share tendons for the differential actuation
-      tendon_lengths = [tl0 - tl1, - tl0 - tl1, tl2]
+      tendon_lengths = [tl0 - tl1,tl2,  - tl0 - tl1]
 
    return tendon_lengths
