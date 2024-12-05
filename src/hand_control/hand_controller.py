@@ -112,8 +112,7 @@ class HandController:
                 self.motor_ids, port, baudrate, lazy_connect=True
             )
         else:
-            self._dxc = DynamixelIndirectClient(
-                start_update_thread=True,
+            self._dxc = DynamixelClient(
                 motor_ids=self.motor_ids,
                 port=port,
                 baudrate=baudrate,
@@ -201,14 +200,8 @@ class HandController:
         send position command to the motors
         unit is rad, angle of the motor connected to tendon
         """
-        max_diff = np.max(np.abs(self.last_motor_pos_cmd - motor_positions_rad))
-        if max_diff > 0.001:  # approx 0.0572 deg
-            self._dxc.gpos = motor_positions_rad
-            self.last_motor_pos_cmd = motor_positions_rad.copy()
-            print(f"Motor pos cmd: {motor_positions_rad}")
-        else:
-            # don't write to the motors if the difference is too small
-            pass
+        with self.motor_lock:
+            self._dxc.write_desired_pos(self.motor_ids, motor_positions_rad)
 
     def write_desired_motor_current(self, motor_currents_mA):
         """
@@ -236,16 +229,20 @@ class HandController:
             self._dxc.set_operating_mode(self.motor_ids, mode)
 
     def get_motor_pos(self):
-        return self._dxc.ppos
+        with self.motor_lock:
+            return self._dxc.read_pos_vel_cur()[0]
 
     def get_motor_cur(self):
-        return self._dxc.pcurr
+        with self.motor_lock:
+            return self._dxc.read_pos_vel_cur()[2]
 
     def get_motor_vel(self):
-        return self._dxc.pvel
+        with self.motor_lock:
+            return self._dxc.read_pos_vel_cur()[1]
 
-    def _get_motor_pos_vel_cur(self):
-        return self._dxc.ppos, self._dxc.pvel, self._dxc.pcurr
+    def wait_for_motion(self):
+        while not all(self._dxc.read_status_is_done_moving()):
+            time.sleep(0.01)
 
     def wait_for_motion(self):
         reached_pos = False
@@ -283,18 +280,21 @@ class HandController:
             joint_pos_begin_idx = joint_pos_end_idx
         return motor_positions
 
-    def pose2motors_sym(self, joint1, joint2, joint3, joint4=None, muscle_group=None):
+    def pose2motors_sym(self, joint1, joint2=None, joint3=None, joint4=None, muscle_group=None):
         """
         return symbolic function for joint position -> motor position, for a single muscle group (i.e. single finger)
         Input: joint angles
         Output: motor positions
         """
-        tendon_lengths = fk.get_tendon_lengths_lambda(
-            joint1, joint2, joint3, muscle_group
-        )
-        motor_pos = self.tendon_pos2motor_pos_sym(
-            tendon_lengths, muscle_group=muscle_group
-        )
+        if muscle_group.name =='wrist':
+            tendon_lengths=fk.get_tendon_length_lambda_wrist(joint1)
+            motor_pos =self.tendon_pos2motor_pos_sym(tendon_lengths, muscle_group)
+        else:
+            tendon_lengths = fk.get_tendon_lengths_lambda(
+            joint1, joint2, joint3, muscle_group)
+            motor_pos = self.tendon_pos2motor_pos_sym(
+            tendon_lengths, muscle_group=muscle_group)
+            
         return motor_pos
 
     def update_motorinitpos(self):
@@ -342,25 +342,50 @@ class HandController:
         else:
             # Disable torque to allow the motors to move freely
             self.disable_torque()
-            input("Move fingers to init position and press Enter to continue...")
+            #input("Move fingers to init position and press Enter to continue...")
             time.sleep(1)  # give some time to hold fingers
+            #fir eischt setzen mer motor current erof vun all motor
+            self.set_operating_mode(5)
+            self.write_desired_motor_current(calib_current*np.ones(len(self.motor_ids)))
+            current_motor_current = self.get_motor_cur()
+            print(f"current motor current = {current_motor_current}")
+            time.sleep(2)
+            #dann setzen mer eng wait eweg distanz vun den motor relativ
+            current_motor_pos = self.get_motor_pos()
+            print(f"current motor pos = {current_motor_pos}")
+            time.sleep(2)
+            print(f"writing motor position")
+            time.sleep(2)
             self.enable_torque()
+            self.write_desired_motor_pos(current_motor_pos + 6) #in radians this is far away
+            #dann wann geschwindegkeet lues ass haalen mer ob -> tendons sinn gestretcht
+            vel_threshold = 0.5
+            print("presetnt vel", self.get_motor_vel() )
+            while np.all(self.get_motor_vel() > vel_threshold):
+                print(f"current velocity = {self.get_motor_vel()}")
+                time.sleep(0.2)
+                
+            self.update_motorinitpos()
+            print(f"new motor position = {self.motor_init_pos}")
+            
+            # finally wärt d'init position ennen gesaat ginn
+            
 
             # Set to current control mode and pull on all tendons (while the user holds the fingers in the init position)
-            self.set_operating_mode(0)
-            self.write_desired_motor_current(
-                calib_current * np.ones(len(self.motor_ids))
-            )
-            time.sleep(2)
+            # self.set_operating_mode(0)
+            # self.write_desired_motor_current(
+            #     calib_current * np.ones(len(self.motor_ids))
+            # )
+            # time.sleep(2)
 
-            # after pulling for a while, set the motor_init_pos
-            self.update_motorinitpos()
+            # # after pulling for a while, set the motor_init_pos
+            # self.update_motorinitpos()
 
         self.motor_pos_norm = self.pose2motors(np.deg2rad(self.calib_pose))
-        if self.init_motor_pos_update_thread:
-            # start a thread to update the motor positions
-            self.motor_pos_update_thread = Thread(target=self._update_motor_status_loop)
-            self.motor_pos_update_thread.start()
+        # if self.init_motor_pos_update_thread:
+        #     # start a thread to update the motor positions
+        #     self.motor_pos_update_thread = Thread(target=self._update_motor_status_loop)
+        #     self.motor_pos_update_thread.start()
 
         if self.compliant_test_mode:
             print("Setting compliant test mode! This disables position control.")
