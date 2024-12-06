@@ -246,7 +246,9 @@ class DynamixelClient:
         assert len(motor_ids) == len(positions)
 
         # Convert to Dynamixel position space.
+        # to convert to dynamixel positions
         positions = positions / self._pos_vel_cur_reader.pos_scale
+        # sends the command to all motors at the same time
         times = self.sync_write(motor_ids, positions, ADDR_GOAL_POSITION,
                         LEN_GOAL_POSITION)
         return times

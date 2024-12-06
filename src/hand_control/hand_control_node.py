@@ -4,9 +4,8 @@ from rclpy.node import Node
 import numpy as np
 from std_msgs.msg import Float32MultiArray, MultiArrayDimension, MultiArrayLayout
 import os
-import sys
-sys.path.append('/home/jamesearljone/ros2_ws/src/real-world-robotics/ros/src/rwr_system/src')
-from hand_control.hand_controller import HandController
+from faive_system.src.hand_control import HandController
+
 
 class HandControllerNode(Node):
     def __init__(self, debug=False):
@@ -19,7 +18,7 @@ class HandControllerNode(Node):
         port = self.get_parameter("hand_controller/port").value
         baudrate = self.get_parameter("hand_controller/baudrate").value
 
-        self._hc = HandController(port=port)
+        self._hc = HandController(port=port, baudrate=baudrate)
 
         self._hc.init_joints(calibrate=True)
         self.joint_angle_sub = self.create_subscription(
@@ -27,12 +26,13 @@ class HandControllerNode(Node):
         )
 
     def joint_angle_cb(self, msg):
-        assert len(msg.data) == 15, "Expected 15 joint angles, got {}".format(
+        assert len(msg.data) == 16, "Expected 15 joint angles, got {}".format(
             len(msg.data)
         )
         joint_angles = np.array(msg.data)
         joint_angles_deg = joint_angles * 180 / np.pi
-        self._hc.write_desired_motor_pos(joint_angles_deg)
+        
+        self._hc.command_joint_angles(joint_angles_deg)
 
 
 def main(args=None):

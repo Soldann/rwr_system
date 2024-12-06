@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
-sys.path.append('/home/jamesearljone/ros2_ws/src/real-world-robotics/ros/src/rwr_system/src')
-from hand_control.JointConfig import *
-
+from .JointConfig import *
 import os
 from ament_index_python.packages import get_package_share_directory
 
