@@ -58,11 +58,11 @@ def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
 
    if muscle_group.name == "thumb":
 
-      # CMC abduction (thuumb)
+      # base
       tl0 = tendon_length_pin_joint(theta1, radius_mm[0][0])
       tl0 = sp.simplify(tl0)
 
-      # CMC flexion (thumb)
+      # CMC Abduction
       tl1 = tendon_length_rolling_contact(theta2, alpha_deg[1][0], alpha_deg[1][1], radius_mm[1][0], radius_mm[1][1])
       tl1 = sp.simplify(tl1)
 
@@ -71,7 +71,7 @@ def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
       tl2 = sp.simplify(tl2)
 
       # Each joint is pretty much independent
-      tendon_lengths = [tl0, tl1, tl2]
+      tendon_lengths = [tl0, tl1-tl2, -tl1-tl2]
    else:
       # MCP abduction
       tl0 = tendon_length_rolling_contact(-theta1, alpha_deg[0][0], alpha_deg[0][1], radius_mm[0][0], radius_mm[0][1])

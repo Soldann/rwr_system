@@ -10,8 +10,8 @@ muscle_groups:
     calibration_max: [0.0, 0.0, 0.0]
     # cmc_flex, cmc_abd, mcp -- alpha1, alpha2 --> strat from the bottom and move upwards for each joint.
     # only the flexion side if they're asymmetric. ignore extension side for now.
-    alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
-    joint_radius: [[4.5, 4.5], [5, 5], [6, 6]]
+    alpha: [[26.4, 26.4], [26.4, 26.4], [63.0, 78.0]]
+    joint_radius: [[4.5, 4.5], [9, 9], [10, 9]]
   index:
     joint_ids: [3, 4, 5] # MCP abduction, MCP flexion, PIP
     motor_ids: [4, 5, 6]
