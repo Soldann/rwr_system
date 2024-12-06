@@ -1,0 +1,25 @@
+finger:
+  MCPflexion:
+    R: 1.15
+    alpha1: pi/2
+    alpha2: pi/2
+  MCPextension:
+    R: 1.15
+    alpha1: -pi/4
+    alpha2: -3*pi/4
+  MCPadduction:
+    R: 1.15
+    alpha1: pi/4
+    alpha2: 3*pi/4
+  MCPabduction:
+    R: 1.15
+    alpha1: -pi/4
+    alpha2: -3*pi/4
+  PIPflexion:
+    R: 1.15
+    alpha1: -pi/4
+    alpha2: -3 * pi/4
+  PIPextension:
+    R: 1.15
+    alpha1: pi/4
+    alpha2: 3*pi/4

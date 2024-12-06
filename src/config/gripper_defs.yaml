@@ -1,0 +1,49 @@
+muscle_groups:
+  finger1:
+    joint_ids: [0, 1, 2]           # ids for each controllable joint, abduction, proximal, distal in this order
+    tendon_ids: [0, 1, 2, 3, 4, 5]    # ids for each tendon right flexor, left extensor, distal flexor, distal extensor, left flexor, right extensor
+    motor_ids: [1, 2, 3]           # ids of motors for this muscle group -> motor1 is resposible for right flexor and left extensor, motor2 is responisble for distal flexor and extensor and motor3 is responisble for left flexor and right extensor
+    motor_map: [1, 1, 2, 2, 3, 3]     # maps each tendon to a certain motor. antagonistic tendons have same motor id in motor_map
+    spool_rad: [0.775, -0.775, 0.775, -0.775, 0.775, -0.775] #in mm    # defines spool radius and wind direction for each tendon, the radius is 7.75mm, I define the flexor to be always in the positive direction
+                                    # wind direction is positive, if tendon attaches on the right side of the spool (from the front of the motor)
+
+  finger2:
+    joint_ids: [3, 4, 5]           # ids for each controllable joint, abduction, proximal, distal in this order
+    tendon_ids: [6, 7, 8, 9, 10, 11]    # ids for each tendon right flexor, left extensor, distal flexor, distal extensor, left flexor, right extensor
+    motor_ids: [4, 5, 6]           # ids of motors for this muscle group -> motor4 is resposible for right flexor and left extensor, motor5 is responisble for distal flexor and extensor and motor6 is responisble for left flexor and right extensor
+    motor_map: [4, 4, 5, 5, 6, 6]     # maps each tendon to a certain motor. antagonistic tendons have same motor id in motor_map
+    spool_rad: [0.775, -0.775, 0.775, -0.775, 0.775, -0.775] #in mm    # defines spool radius and wind direction for each tendon, the radius is 7.75mm, I define the flexor to be always in the positive direction
+                                    # wind direction is positive, if tendon attaches on the right side of the spool (from the front of the motor)
+
+  finger3:
+    joint_ids: [6, 7, 8]           # ids for each controllable joint, abduction, proximal, distal in this order
+    tendon_ids: [12, 13, 14, 15, 16, 17]    # ids for each tendon right flexor, left extensor, distal flexor, distal extensor, left flexor, right extensor
+    motor_ids: [7, 8, 9]           # ids of motors for this muscle group -> motor7 is resposible for right flexor and left extensor, motor8 is responisble for distal flexor and extensor and motor9 is responisble for left flexor and right extensor
+    motor_map: [7, 7, 8, 8, 9, 9]     # maps each tendon to a certain motor. antagonistic tendons have same motor id in motor_map
+    spool_rad: [0.775, -0.775, 0.775, -0.775, 0.775, -0.775] #in mm    # defines spool radius and wind direction for each tendon, the radius is 7.75mm, I define the flexor to be always in the positive direction
+                                    # wind direction is positive, if tendon attaches on the right side of the spool (from the front of the motor)
+
+  thumbleft:
+    joint_ids: [9, 10]    # ids for each controllable joint, proximal, distal in this order
+    tendon_ids: [18, 19, 20, 21]   #ids for each tnedon proximal flexor, proximal entensor, distal flexor, distal extensor in this order
+    motor_ids: [10, 11]       #ids of motors for this muscle group -> motor10 is responsible for proximal flexor and extensor and motor11 is responsible for distal flexor and extensor
+    motor_map: [10, 10, 11, 11]  ## maps each tendon to a certain motor. antagonistic tendons have same motor id in motor_map
+    spool_rad: [7.75, -7.75, 7.75, -7.75] #in mm    # defines spool radius and wind direction for each tendon, the radius is 7.75mm, I define the flexor to be always in the positive direction
+                                    # wind direction is positive, if tendon attaches on the right side of the spool (from the front of the motor)
+  thumbright:
+    joint_ids: [11, 12]    # ids for each controllable joint, proximal, distal in this order
+    tendon_ids: [22, 23, 24, 25]   #ids for each tnedon proximal flexor, proximal entensor, distal flexor, distal extensor in this order
+    motor_ids: [12, 13]       #ids of motors for this muscle group -> motor12 is responsible for proximal flexor and extensor and motor13 is responsible for distal flexor and extensor
+    motor_map: [12, 12, 13, 13]  ## maps each tendon to a certain motor. antagonistic tendons have same motor id in motor_map
+    spool_rad: [7.75, -7.75, 7.75, -7.75] #in mm    # defines spool radius and wind direction for each tendon, the radius is 7.75mm, I define the flexor to be always in the positive direction
+                                    # wind direction is positive, if tendon attaches on the right side of the spool (from the front of the motor)
+
+
+
+  # finger1:
+  #   joint_ids: [0, 1]           # ids for each controllable joint from proximal to distal
+  #   tendon_ids: [0, 1, 2, 3]    # ids for each tendon according to joints, first flexor then extensor, from proximal to distal
+  #   motor_ids: [1, 2]           # ids of motors for this muscle group
+  #   motor_map: [1, 1, 2, 2]     # maps each tendon to a certain motor. antagonistic tendons have same motor id in motor_map
+  #   spool_rad: [-5, 5, -5, 5]   # defines spool radius and wind direction for each tendon. 
+                                # wind direction is positive, if tendon attaches on the right side of the spool (from the front of the motor)

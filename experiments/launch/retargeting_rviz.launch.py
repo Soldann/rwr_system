@@ -10,7 +10,7 @@ def generate_launch_description():
         get_package_share_directory('viz'),
         "models",
         "URDF_Simulation",
-        "model_V5.urdf")
+        "model_V6.urdf")
     # urdf = os.path.join(
     # get_package_share_directory('viz'),
     # "models",
@@ -29,6 +29,18 @@ def generate_launch_description():
                 name="mediapipe_node",
                 output="log",
             ),
+            
+            # Node(
+            #     package="ingress",
+            #     executable="rokoko_node.py",
+            #     name="rokoko_node",
+            #     output="log",
+            #     parameters=[
+            #         {"rokoko_tracker/ip": "0.0.0.0"},
+            #         {"rokoko_tracker/port": 14043},
+            #         {"rokoko_tracker/use_coil": True}
+            #     ],
+            # ),
 
             # RETARGET NODE
             Node(
@@ -38,22 +50,30 @@ def generate_launch_description():
                 output="screen",
                 # COMMENT OR UNCOMMENT THE FOLLOWING LINES TO SWITCH BETWEEN MJCF AND URDF, JUST ONE OF THEM SHOULD BE ACTIVE TODO: Make this a parameter
                 parameters=[
-                    # {
-                    #     "retarget/mjcf_filepath": os.path.join(
-                    #         get_package_share_directory("viz"),
-                    #         "models",
-                    #         "faive_hand_p4",
-                    #         "hand_p4.xml",
-                    #     )
-                    # },
                     {
                         "retarget/urdf_filepath": os.path.join(
                             get_package_share_directory('viz'),
                             "models",
                             "URDF_Simulation",
-                            "model_V5.urdf")
+                            "model_V6.urdf",
+                        ),
+                        "retarget/hand_scheme": os.path.join(
+                            get_package_share_directory("viz"),
+                            "models",
+                            "URDF_Simulation",
+                            "scheme_hand.yaml",
+                        ),
+                        "retarget/mano_adjustments": os.path.join(
+                            get_package_share_directory("experiments"),
+                            "cfgs",
+                            "retargeter_adjustment_hand.yaml"
+                        ),
+                        "retarget/retargeter_cfg": os.path.join(
+                            get_package_share_directory("experiments"),
+                            "cfgs",
+                            "retargeter_cfgs_hand.yaml"
+                        ),
                     },
-                    {"retarget/hand_scheme": "hand"},
                     {"debug": True},
                 ],
             ),
