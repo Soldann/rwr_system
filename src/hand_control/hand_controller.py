@@ -80,7 +80,7 @@ class HandController:
         config_yml: str = "hand_defs.yaml",
         init_motor_pos_update_thread: bool = True,
         compliant_test_mode: bool = False,
-        max_motor_current: float = 200.0,
+        max_motor_current: float = 150.0,
         dummy_mode: bool = False,
         baudrate: int = 3000000
     ):
@@ -348,12 +348,12 @@ class HandController:
             self.set_operating_mode(5)
             self.write_desired_motor_current(calib_current*np.ones(len(self.motor_ids)))
             print(f"current motor current = {self.get_motor_cur()}")
-            time.sleep(4)
+            time.sleep(1)
             #dann setzen mer eng wait eweg distanz vun den motor relativ
             print(f"current motor pos = {self.get_motor_pos()}")
-            time.sleep(2)
+            time.sleep(1)
             print(f"writing motor position")
-            time.sleep(2)
+            time.sleep(1)
             self.enable_torque()
             self.write_desired_motor_pos(self.get_motor_pos() - 6) #in radians this is far away
             #dann wann geschwindegkeet lues ass haalen mer ob -> tendons sinn gestretcht
