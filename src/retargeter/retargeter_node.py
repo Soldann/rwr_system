@@ -11,6 +11,7 @@ from faive_system.src.common.utils import numpy_to_float32_multiarray
 import os
 from faive_system.src.viz.visualize_mano import ManoHandVisualizer
 import time
+from tf_transformations import euler_from_quaternion
 from visualize_retargeter import KeyvectorVisualizer
 
 class RetargeterNode(Node):
@@ -84,6 +85,12 @@ class RetargeterNode(Node):
 
     def quat2yaw(self, q):
         return np.arctan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z)
+    
+    def quat2pitch(self, q):
+        return np.arcsin(-2.0*(q.x*q.z - q.w*q.y))
+    
+    def quat2roll(self, q):
+        return np.arctan2(2.0*(q.x*q.y + q.w*q.z), q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z)
         
     def timer_publish_cb(self):
         if self.keypoint_positions is None:
@@ -123,10 +130,13 @@ class RetargeterNode(Node):
             )
 
         if self.wrist_positions:
-            wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
+            wrist_angle = euler_from_quaternion((self.wrist_positions.orientation.x, self.wrist_positions.orientation.y, self.wrist_positions.orientation.z, self.wrist_positions.orientation.w))
+            wrist_angle = wrist_angle[0]
+            # wrist_angle = self.quat2yaw(self.wrist_positions.orientation)*-0.8
         else:
             wrist_angle = 0.0
-        joint_angles[0] = wrist_angle
+        print(wrist_angle)
+        joint_angles[0] = - np.rad2deg(wrist_angle) + 90
         # joint_angles = np.concatenate((joint_angles,wrist_angle))
         self.joints_pub.publish(
             numpy_to_float32_multiarray(np.deg2rad(joint_angles))
