@@ -82,8 +82,8 @@ class RetargeterNode(Node):
     def ingress_wrist_cb(self,msg):
         self.wrist_positions = msg.pose
 
-    def quat2yaw(q):
-        return np.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z)
+    def quat2yaw(self, q):
+        return np.arctan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z)
         
     def timer_publish_cb(self):
         if self.keypoint_positions is None:
@@ -122,10 +122,11 @@ class RetargeterNode(Node):
                 stamp=self.get_clock().now().to_msg()
             )
 
-        if self.wrist_positions and False:
+        if self.wrist_positions:
             wrist_angle = self.quat2yaw(self.wrist_positions.orientation)
         else:
-            wrist_angle = np.array([0])
+            wrist_angle = 0.0
+        joint_angles[0] = wrist_angle
         # joint_angles = np.concatenate((joint_angles,wrist_angle))
         self.joints_pub.publish(
             numpy_to_float32_multiarray(np.deg2rad(joint_angles))
