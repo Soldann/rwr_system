@@ -80,7 +80,7 @@ class HandController:
         config_yml: str = "hand_defs.yaml",
         init_motor_pos_update_thread: bool = True,
         compliant_test_mode: bool = False,
-        max_motor_current: float = 150.0,
+        max_motor_current: float = 200.0,
         dummy_mode: bool = False,
         baudrate: int = 3000000
     ):
