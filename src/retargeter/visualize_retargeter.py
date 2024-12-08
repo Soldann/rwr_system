@@ -27,7 +27,7 @@ class KeyvectorVisualizer:
         # Add bone lines
         for vector_name, vector in keyvectors.items():
             bone_marker = Marker()
-            bone_marker.header.frame_id = "root"
+            bone_marker.header.frame_id = "hand_root"
             bone_marker.header.stamp = stamp
             bone_marker.ns = vector_name
             bone_marker.type = Marker.ARROW
@@ -57,7 +57,7 @@ class KeyvectorVisualizer:
 
         # Create marker for joints
         joint_marker = Marker()
-        joint_marker.header.frame_id = "root"
+        joint_marker.header.frame_id = "hand_root"
         joint_marker.header.stamp = stamp
         joint_marker.ns = "joints"
         joint_marker.type = Marker.POINTS
@@ -108,7 +108,7 @@ class KeyvectorVisualizer:
         }
         for i, (axis_name, (axis_vector, color)) in enumerate(axes.items()):
             arrow_marker = Marker()
-            arrow_marker.header.frame_id = "root"
+            arrow_marker.header.frame_id = "hand_root"
             arrow_marker.header.stamp = stamp
             arrow_marker.ns = "frame"
             arrow_marker.type = Marker.ARROW
