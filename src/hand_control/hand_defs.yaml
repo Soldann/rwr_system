@@ -1,6 +1,18 @@
 muscle_groups:
+  wrist:
+    joint_ids: [0]
+    motor_ids: [12]
+    spool_rad: [7.75]
+    wind_direction: [-1]
+    joint_ranges: [[-45, 45]]
+    # joint_ranges: [[-30, 30], [-18, 95], [-15, 110]]
+    motor_init_pos: [0.38042724]
+    calibration_max: [0.0]
+    # calibration_max: [0, 85, 105]
+    alpha: [[26.4, 26.4]]
+    joint_radius: [[9, 9]]
   thumb:
-    joint_ids: [0, 1, 2] # ids for each controllable joint from proximal to distal (CMC_flex, CMC_abd, MCP)
+    joint_ids: [1, 2, 3] # ids for each controllable joint from proximal to distal (CMC_flex, CMC_abd, MCP)
     motor_ids: [10, 11, 13] # ids of according motors
     spool_rad: [7.75, 7.75, 7.75] # defines spool radius for each tendon.
     wind_direction: [-1, -1, -1] # wind direction is positive, if flexion tendon attaches on the right side of the spool (from the front of the motor)
@@ -13,7 +25,7 @@ muscle_groups:
     alpha: [[26.4, 26.4], [26.4, 26.4], [63.0, 78.0]]
     joint_radius: [[4.5, 4.5], [9, 9], [10, 9]]
   index:
-    joint_ids: [3, 4, 5] # MCP abduction, MCP flexion, PIP
+    joint_ids: [4, 5, 6] # MCP abduction, MCP flexion, PIP
     motor_ids: [4, 5, 6]
     spool_rad: [7.75, 7.75, 7.75]
     wind_direction: [-1, -1, -1]
@@ -25,7 +37,7 @@ muscle_groups:
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
     joint_radius: [[9, 9], [10, 9], [6, 6]]
   middle:
-    joint_ids: [6, 7, 8]
+    joint_ids: [7, 8, 9]
     motor_ids: [7, 8, 9]
     spool_rad: [7.75, 7.75, 7.75]
     wind_direction: [-1, -1, -1]
@@ -37,7 +49,7 @@ muscle_groups:
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
     joint_radius: [[9, 9], [10, 9], [6, 6]]
   ring:
-    joint_ids: [9, 10, 11]
+    joint_ids: [10, 11, 12]
     motor_ids: [14, 15, 16]
     spool_rad: [7.75, 7.75, 7.75]
     wind_direction: [-1, -1, -1]
@@ -49,7 +61,7 @@ muscle_groups:
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
     joint_radius: [[9, 9], [10, 9], [6, 6]]
   pinky:
-    joint_ids: [12, 13, 14]
+    joint_ids: [13, 14, 15]
     motor_ids: [1, 2, 3]
     spool_rad: [7.75, 7.75, 7.75]
     wind_direction: [-1, -1, -1]
@@ -60,15 +72,3 @@ muscle_groups:
     # calibration_max: [0, 85, 105]
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
     joint_radius: [[9, 9], [10, 9], [6, 6]]
-  wrist:
-    joint_ids: [15]
-    motor_ids: [12]
-    spool_rad: [7.75]
-    wind_direction: [-1]
-    joint_ranges: [[-45, 45]]
-    # joint_ranges: [[-30, 30], [-18, 95], [-15, 110]]
-    motor_init_pos: [0.38042724]
-    calibration_max: [0.0]
-    # calibration_max: [0, 85, 105]
-    alpha: [[26.4, 26.4]]
-    joint_radius: [[9, 9]]
