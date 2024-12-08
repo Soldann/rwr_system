@@ -12,8 +12,8 @@ muscle_groups:
     alpha: [[26.4, 26.4]]
     joint_radius: [[9, 9]]
   thumb:
-    joint_ids: [1, 2, 3] # ids for each controllable joint from proximal to distal (CMC_flex, CMC_abd, MCP)
-    motor_ids: [13, 11, 10] # ids of according motors
+    joint_ids: [1, 2, 3] # ids for each controllable joint from proximal to distal (base, CMC_abd, flexion)
+    motor_ids: [13, 10, 11] # ids of according motors
     spool_rad: [7.75, 7.75, 7.75] # defines spool radius for each tendon.
     wind_direction: [-1, -1, -1] # wind direction is positive, if flexion tendon attaches on the right side of the spool (from the front of the motor)
     joint_ranges: [[-15, 97], [0, 90], [-15, 97]] # limits of joint angles in deg, from inital position

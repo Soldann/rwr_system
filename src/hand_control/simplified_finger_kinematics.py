@@ -63,11 +63,11 @@ def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
       tl0 = sp.simplify(tl0)
 
       # CMC Abduction
-      tl1 = tendon_length_rolling_contact(theta2, alpha_deg[1][0], alpha_deg[1][1], radius_mm[1][0], radius_mm[1][1])
+      tl1 = tendon_length_rolling_contact(-theta2, alpha_deg[1][0], alpha_deg[1][1], radius_mm[1][0], radius_mm[1][1])
       tl1 = sp.simplify(tl1)
 
-      # PIP flexion
-      tl2 = tendon_length_rolling_contact(theta3, alpha_deg[2][0], alpha_deg[2][1], radius_mm[2][0], radius_mm[2][1])
+      # CMC flexion
+      tl2 = tendon_length_rolling_contact(-theta3, alpha_deg[2][0], alpha_deg[2][1], radius_mm[2][0], radius_mm[2][1])
       tl2 = sp.simplify(tl2)
 
       # Each joint is pretty much independent
