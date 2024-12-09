@@ -74,7 +74,7 @@ def get_tendon_lengths_lambda(theta1, theta2, theta3, muscle_group):
       tendon_lengths = [tl0, tl1-tl2, -tl1-tl2]
    else:
       # MCP abduction
-      tl0 = tendon_length_rolling_contact(-theta1, alpha_deg[0][0], alpha_deg[0][1], radius_mm[0][0], radius_mm[0][1])
+      tl0 = tendon_length_rolling_contact(theta1, alpha_deg[0][0], alpha_deg[0][1], radius_mm[0][0], radius_mm[0][1])
       tl0 = sp.simplify(tl0)
 
       # MCP flexion
