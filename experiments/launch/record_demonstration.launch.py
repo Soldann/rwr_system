@@ -26,17 +26,17 @@ def generate_launch_description():
     return LaunchDescription(
         [
             # CAMERA INGRESS NODE
-            # Node(
-            #     package="ingress",
-            #     executable="oakd_node.py",
-            #     name="oakd_node",
-            #     output="log",
-            #     parameters=[
-            #         {"enable_front_camera": cameras["front_view"]},
-            #         {"enable_side_camera": cameras["side_view"]},
-            #         {"enable_wrist_camera": cameras["wrist_view"]},
-            #     ],
-            # ),
+            Node(
+                package="ingress",
+                executable="oakd_node.py",
+                name="oakd_node",
+                output="log",
+                parameters=[
+                    {"enable_front_camera": cameras["front_view"]},
+                    {"enable_side_camera": cameras["side_view"]},
+                    # {"enable_wrist_camera": cameras["wrist_view"]},
+                ],
+            ),
             
             Node(
                 package="ingress",
@@ -51,12 +51,12 @@ def generate_launch_description():
             ),
 
             # HAND CONTROLLER NODE
-            Node(
-                package="hand_control",
-                executable="hand_control_node.py",
-                name="hand_control_node",
-                output="screen"
-            ),
+            # Node(
+            #     package="hand_control",
+            #     executable="hand_control_node.py",
+            #     name="hand_control_node",
+            #     output="screen"
+            # ),
             
             # RETARGET NODE
             Node(
