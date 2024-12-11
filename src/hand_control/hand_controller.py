@@ -323,7 +323,7 @@ class HandController:
         :param calibrate: if True, perform calibration and set the offsets else move to the initial position
         """
 
-        calib_current = 40  # mA
+        calib_current = 80  # mA
 
         cal_yaml_fname = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "cal.yaml"
@@ -357,17 +357,18 @@ class HandController:
             self.enable_torque()
             self.write_desired_motor_pos(self.get_motor_pos() - 6) #in radians this is far away
             #dann wann geschwindegkeet lues ass haalen mer ob -> tendons sinn gestretcht
-            vel_threshold = 0.1
-            vel_threshold2 = 0.2
-            while np.all(np.abs(self.get_motor_vel()) < vel_threshold2):
-                print("waiting for motors to start up")
-                time.sleep(0.1)
-            
-            print("presetnt vel", self.get_motor_vel() )
-            while np.all(np.abs(self.get_motor_vel()) > vel_threshold):
-                print(f"current velocity = {self.get_motor_vel()}")
-            print("present position: ", self.get_motor_pos())
             time.sleep(1)
+            # vel_threshold = 0.1
+            # vel_threshold2 = 0.05
+            # while np.all(np.abs(self.get_motor_vel()) < vel_threshold2):
+            #     print("waiting for motors to start up")
+            #     time.sleep(0.1)
+            
+            # print("presetnt vel", self.get_motor_vel() )
+            # while np.all(np.abs(self.get_motor_vel()) > vel_threshold):
+            #     print(f"current velocity = {self.get_motor_vel()}")
+            # print("present position: ", self.get_motor_pos())
+            # time.sleep(1)
             self.update_motorinitpos()
 
             print(f"new motor position = {self.motor_init_pos}")
@@ -398,11 +399,14 @@ class HandController:
         else:
             # start position control
             self.set_operating_mode(5)
+            current = self.max_motor_current * np.ones(len(self.motor_ids))
+            current[11] = self.max_motor_current * 2
             self.write_desired_motor_current(
-                self.max_motor_current * np.ones(len(self.motor_ids))
+                current
             )
             print(f"Move to init pose: {self.motor_init_pos}")
             self.write_desired_motor_pos(self.motor_init_pos)
+            time.sleep(4)
 
     def command_joint_angles(self, joint_angles_deg: np.array):
         """

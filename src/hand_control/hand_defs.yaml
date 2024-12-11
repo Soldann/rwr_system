@@ -35,7 +35,7 @@ muscle_groups:
     # calibration_max: [0, 80, 100]
     calibration_max: [0.0, 0.0, 0.0]
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
-    joint_radius: [[35, 35], [15, 13], [20, 20]]
+    joint_radius: [[10,10], [15, 13], [20, 20]]
   middle:
     joint_ids: [7, 8, 9]
     motor_ids: [7, 8, 9]
@@ -47,7 +47,7 @@ muscle_groups:
     # calibration_max: [0, 85, 105]
     calibration_max: [0.0, 0.0, 0.0]
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
-    joint_radius: [[35, 35], [15, 13], [20, 20]]
+    joint_radius: [[10,10], [15, 13], [20, 20]]
   ring:
     joint_ids: [10, 11, 12]
     motor_ids: [14, 15, 16]
@@ -59,7 +59,7 @@ muscle_groups:
     # calibration_max: [0, 85, 105]
     calibration_max: [0.0, 0.0, 0.0]
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
-    joint_radius: [[35, 35], [15, 13], [20, 20]]
+    joint_radius: [[10,10], [15, 13], [20, 20]]
   pinky:
     joint_ids: [13, 14, 15]
     motor_ids: [1, 2, 3]
@@ -71,4 +71,4 @@ muscle_groups:
     calibration_max: [0.0, 0.0, 0.0]
     # calibration_max: [0, 85, 105]
     alpha: [[26.4, 26.4], [63.0, 78.0], [110.0, 95.0]]
-    joint_radius: [[35, 35], [15, 13], [20, 20]]
+    joint_radius: [[10,10], [15, 13], [20, 20]]
