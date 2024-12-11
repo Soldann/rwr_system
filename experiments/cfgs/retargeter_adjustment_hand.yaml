@@ -15,6 +15,6 @@ ring:
   rotation : [0.0, 0.0, -0.261799]
   scale : [1.0, 1.0, 1.0]
 pinky: 
-  translation : [0.010, 0.02, 0.015]
+  translation : [0.008, 0.02, 0.015]
   rotation : [0.0, 0.0, -0.261799]
-  scale : [1.0, 1.0, 1.0]
+  scale : [1.0, 1.4, 1.0]

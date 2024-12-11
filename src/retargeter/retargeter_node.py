@@ -49,11 +49,14 @@ class RetargeterNode(Node):
         
         self.wrist_positions = None
         self.current_wrist_quaternion = Quaternion()
-        self.current_wrist_quaternion.w = 1.0
-        self.current_wrist_quaternion.x = 0.0
-        self.current_wrist_quaternion.y = 0.0
-        self.current_wrist_quaternion.z = 0.0
-        self.current_wrist_quaternion = None
+        # self.current_wrist_quaternion.w = 1.0
+        # self.current_wrist_quaternion.x = 0.0
+        # self.current_wrist_quaternion.y = 0.0
+        # self.current_wrist_quaternion.z = 0.0
+        self.x = -0.11681980242430118
+        self.y = -0.07295181277118952
+        self.z = 0.15711851343109345
+        self.w = 0.9779289030968192
         self.wrist_angle = 0.0
 
         # subscribe to ingress topics
@@ -100,6 +103,36 @@ class RetargeterNode(Node):
     
     def quat2roll(self, q):
         return np.arctan2(2.0*(q.x*q.y + q.w*q.z), q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z)
+    
+    def normalize_quaternion(self, q):
+        """Normalize a quaternion to ensure it has unit length."""
+        norm = np.linalg.norm(q)
+        return q / norm
+
+    def quaternion_angle(self, q1, q2):
+        """
+        Compute the angle between two quaternions in radians.
+
+        Args:
+            q1 (array-like): First quaternion (w, x, y, z).
+            q2 (array-like): Second quaternion (w, x, y, z).
+
+        Returns:
+            float: The angle between the two quaternions in radians.
+        """
+        # Normalize the quaternions
+        q1 = self.normalize_quaternion(np.array(q1))
+        q2 = self.normalize_quaternion(np.array(q2))
+
+        # Compute the dot product of the quaternions
+        dot_product = np.dot(q1, q2)
+
+        # Clamp the dot product to the valid range for arccos (to handle numerical errors)
+        dot_product = np.clip(dot_product, -1.0, 1.0)
+
+        # Compute the angle
+        angle = 2 * np.arccos(dot_product)
+        return angle
     
     def quaternion_multiply(self, q0, q1):
         """
@@ -182,17 +215,20 @@ class RetargeterNode(Node):
             # inverse_q = self.current_wrist_quaternion
             # inverse_q.w = - inverse_q.w
             # relative_q = self.quaternion_multiply(self.wrist_positions.orientation, inverse_q)
+            # self.wrist_angle = 2* np.arctan2(np.sqrt(relative_q.x**2 + relative_q.y**2 + relative_q.z**2), relative_q.w)
+
+            self.wrist_angle = self.quaternion_angle([self.current_wrist_quaternion.w, self.current_wrist_quaternion.x, self.current_wrist_quaternion.y, self.current_wrist_quaternion.z,],
+                                                     [self.wrist_positions.orientation.w, self.wrist_positions.orientation.x, self.wrist_positions.orientation.y, self.wrist_positions.orientation.z])
             # yaw_change = self.quat2yaw(relative_q)
             # print(yaw_change)
             # self.wrist_angle += np.rad2deg(yaw_change)
             # self.current_wrist_quaternion = self.wrist_positions.orientation
-            self.wrist_angle = euler_from_quaternion((self.wrist_positions.orientation.x, self.wrist_positions.orientation.y, self.wrist_positions.orientation.z, self.wrist_positions.orientation.w))
-            self.wrist_angle = self.wrist_angle[0]
+            # self.wrist_angle = euler_from_quaternion((self.wrist_positions.orientation.x, self.wrist_positions.orientation.y, self.wrist_positions.orientation.z, self.wrist_positions.orientation.w))
+            # self.wrist_angle = self.wrist_angle[0]
             # wrist_angle = self.quat2yaw(self.wrist_positions.orientation)*-0.8
-        self.wrist_angle = np.clip(- np.rad2deg(self.wrist_angle) + 150,-35,35)
+        # self.wrist_angle = np.clip(- np.rad2deg(self.wrist_angle) + 150,-35,35)
         # self.wrist_angle = - np.rad2deg(self.wrist_angle) + 150
-        # joint_angles[0] = wrist_angle
-        # joint_angles[0] = self.wrist_angle
+        joint_angles[0] =  np.rad2deg(self.wrist_angle) - 90
         # joint_angles = np.concatenate((joint_angles,wrist_angle))
         self.joints_pub.publish(
             numpy_to_float32_multiarray(np.deg2rad(joint_angles))
