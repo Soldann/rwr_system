@@ -53,10 +53,10 @@ class RetargeterNode(Node):
         # self.current_wrist_quaternion.x = 0.0
         # self.current_wrist_quaternion.y = 0.0
         # self.current_wrist_quaternion.z = 0.0
-        self.x = -0.11681980242430118
-        self.y = -0.07295181277118952
-        self.z = 0.15711851343109345
-        self.w = 0.9779289030968192
+        self.current_wrist_quaternion.x = -0.12414917128160695
+        self.current_wrist_quaternion.y = 0.10820952042810013
+        self.current_wrist_quaternion.z = 0.07649801389849054
+        self.current_wrist_quaternion.w = 0.983374667575079
         self.wrist_angle = 0.0
 
         # subscribe to ingress topics
@@ -228,7 +228,8 @@ class RetargeterNode(Node):
             # wrist_angle = self.quat2yaw(self.wrist_positions.orientation)*-0.8
         # self.wrist_angle = np.clip(- np.rad2deg(self.wrist_angle) + 150,-35,35)
         # self.wrist_angle = - np.rad2deg(self.wrist_angle) + 150
-        joint_angles[0] =  np.rad2deg(self.wrist_angle) - 90
+        joint_angles[0] = (( np.rad2deg(self.wrist_angle) - 135) + 180) % 360 - 180
+        # joint_angles[0] = 0
         # joint_angles = np.concatenate((joint_angles,wrist_angle))
         self.joints_pub.publish(
             numpy_to_float32_multiarray(np.deg2rad(joint_angles))

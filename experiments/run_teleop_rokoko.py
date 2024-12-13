@@ -98,6 +98,20 @@ class RokokoCoilDemo(Node):
         )
 
         return X_W_fEE_d
+    
+    def publish_target_pose_direct(self):
+        msg = PoseStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "world"
+        msg.pose.position = Point(
+            x=0.38917590049091827,
+            y=-0.47067091034205305,
+            z=0.36824346491770454,
+        )
+        msg.pose.orientation = Quaternion(
+            x=-0.5492044237855264, y=0.208324108069625, z=0.26553101051875105, w=0.7645056241417025
+        )
+        self.arm_publisher.publish(msg)
 
     def publish_target_pose(self, X_W_fEE_d: DrakeRigidTransform):
         msg = PoseStamped()
@@ -139,11 +153,13 @@ class RokokoCoilDemo(Node):
         start_target = np.dot(start_target, R_z_neg90)
 
 
+
         start_target = DrakeRigidTransform(start_target)
-        self.publish_target_pose(start_target)
+        # self.publish_target_pose(start_target)
+        self.publish_target_pose_direct()
 
         input("Press enter to calibrate the robot")
-        self.X_W_fEE_init = deepcopy(start_target)
+        #self.X_W_fEE_init = deepcopy(start_target)
 
         input("Press enter to calibrate the glove")
         self.X_bCP_G_init = self.get_hand_pose()
