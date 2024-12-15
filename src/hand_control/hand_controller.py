@@ -323,7 +323,7 @@ class HandController:
         :param calibrate: if True, perform calibration and set the offsets else move to the initial position
         """
 
-        calib_current = 40  # mA
+        calib_current = 80  # mA
 
         cal_yaml_fname = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "cal.yaml"
@@ -392,7 +392,7 @@ class HandController:
             self.write_desired_motor_pos(self.motor_init_pos)
             #self.set_operating_mode(5)
             desired_currents = self.max_motor_current * np.ones(len(self.motor_ids))
-            desired_currents[11] *= 5
+            desired_currents[11] *= 3
             self.write_desired_motor_current(
                 desired_currents
             )

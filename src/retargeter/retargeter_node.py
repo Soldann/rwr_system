@@ -11,7 +11,7 @@ from faive_system.src.common.utils import numpy_to_float32_multiarray
 import os
 from faive_system.src.viz.visualize_mano import ManoHandVisualizer
 import time
-from tf_transformations import euler_from_quaternion
+# from tf_transformations import euler_from_quaternion
 from visualize_retargeter import KeyvectorVisualizer
 
 class RetargeterNode(Node):
@@ -53,10 +53,10 @@ class RetargeterNode(Node):
         # self.current_wrist_quaternion.x = 0.0
         # self.current_wrist_quaternion.y = 0.0
         # self.current_wrist_quaternion.z = 0.0
-        self.current_wrist_quaternion.x = -0.12414917128160695
-        self.current_wrist_quaternion.y = 0.10820952042810013
-        self.current_wrist_quaternion.z = 0.07649801389849054
-        self.current_wrist_quaternion.w = 0.983374667575079
+        self.current_wrist_quaternion.x = 0.09638827335909649
+        self.current_wrist_quaternion.y = 0.09438689349698638
+        self.current_wrist_quaternion.z = 0.11731742291713203
+        self.current_wrist_quaternion.w = 0.9838887322126031
         self.wrist_angle = 0.0
 
         # subscribe to ingress topics
@@ -228,7 +228,7 @@ class RetargeterNode(Node):
             # wrist_angle = self.quat2yaw(self.wrist_positions.orientation)*-0.8
         # self.wrist_angle = np.clip(- np.rad2deg(self.wrist_angle) + 150,-35,35)
         # self.wrist_angle = - np.rad2deg(self.wrist_angle) + 150
-        joint_angles[0] = (( np.rad2deg(self.wrist_angle) - 135) + 180) % 360 - 180
+        joint_angles[0] = (( np.rad2deg(self.wrist_angle) - 135)+180) % 360-180
         # joint_angles[0] = 0
         # joint_angles = np.concatenate((joint_angles,wrist_angle))
         self.joints_pub.publish(

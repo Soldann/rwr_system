@@ -10,7 +10,7 @@ muscle_groups:
     calibration_max: [0.0]
     # calibration_max: [0, 85, 105]
     alpha: [[26.4, 26.4]]
-    joint_radius: [[9, 9]]
+    joint_radius: [[13, 13]]
   thumb:
     joint_ids: [1, 2, 3] # ids for each controllable joint from proximal to distal (base, CMC_abd, flexion)
     motor_ids: [13, 10, 11] # ids of according motors
