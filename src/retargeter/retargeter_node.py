@@ -194,8 +194,7 @@ class RetargeterNode(Node):
             )
 
             self.keyvector_visualizer.generate_hand_markers(
-                {"palm": debug_dict["palm"]},
-                stamp=self.get_clock().now().to_msg()
+                {"palm": debug_dict["palm"]},                stamp=self.get_clock().now().to_msg()
             )
             self.keyvector_visualizer.generate_hand_markers(
                 debug_dict["fingertips"],
@@ -206,8 +205,33 @@ class RetargeterNode(Node):
                 stamp=self.get_clock().now().to_msg()
             )
             self.keyvector_visualizer.generate_keyvectors(
-                debug_dict["keyvectors_faive"],
+                [debug_dict["keyvectors_faive"]["palm2thumb"],
+                 debug_dict["keyvectors_faive"]["palm2index"],
+                 debug_dict["keyvectors_faive"]["palm2middle"],
+                 debug_dict["keyvectors_faive"]["palm2ring"],
+                 debug_dict["keyvectors_faive"]["palm2pinky"],
+                 ],
                 debug_dict["palm"],
+                stamp=self.get_clock().now().to_msg()
+            )
+            self.keyvector_visualizer.generate_keyvectors(
+                [debug_dict["keyvectors_faive"]["thumb2index"]],
+                debug_dict["fingertips"]["thumb"],
+                stamp=self.get_clock().now().to_msg()
+            )
+            self.keyvector_visualizer.generate_keyvectors(
+                [debug_dict["keyvectors_faive"]["index2middle"]],
+                debug_dict["fingertips"]["index"],
+                stamp=self.get_clock().now().to_msg()
+            )
+            self.keyvector_visualizer.generate_keyvectors(
+                [debug_dict["keyvectors_faive"]["middle2ring"]],
+                debug_dict["fingertips"]["middle"],
+                stamp=self.get_clock().now().to_msg()
+            )
+            self.keyvector_visualizer.generate_keyvectors(
+                [debug_dict["keyvectors_faive"]["ring2pinky"]],
+                debug_dict["fingertips"]["ring"],
                 stamp=self.get_clock().now().to_msg()
             )
 

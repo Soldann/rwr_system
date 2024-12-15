@@ -165,9 +165,9 @@ class Retargeter:
         self.frames_we_care_about = None
 
         if self.use_scalar_distance_palm:
-            self.use_scalar_distance = [False, True, True, True, True]
+            self.use_scalar_distance = [False, True, True, True, True, True, True, True, True]
         else:
-            self.use_scalar_distance = [False, False, False, False, False]
+            self.use_scalar_distance = [False, False, False, False, False, False, False, False, False]
 
         self.sanity_check()
         _chain_transforms = self.chain.forward_kinematics(

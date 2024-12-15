@@ -25,11 +25,12 @@ class KeyvectorVisualizer:
         markers = []
     
         # Add bone lines
-        for vector_name, vector in keyvectors.items():
+        # for vector_name, vector in keyvectors.items():
+        for vector in keyvectors:
             bone_marker = Marker()
             bone_marker.header.frame_id = "hand_root"
             bone_marker.header.stamp = stamp
-            bone_marker.ns = vector_name
+            # bone_marker.ns = vector_name
             bone_marker.type = Marker.ARROW
             bone_marker.action = Marker.ADD
             bone_marker.scale.x = 0.005  # Line width
@@ -75,7 +76,7 @@ class KeyvectorVisualizer:
             joint_marker.points.append(p)
 
             label_marker = Marker()
-            label_marker.header.frame_id = "root"
+            label_marker.header.frame_id = "hand_root"
             label_marker.header.stamp = stamp
             label_marker.ns = "labels"
             label_marker.type = Marker.TEXT_VIEW_FACING
